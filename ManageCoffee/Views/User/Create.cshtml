@@ -1,0 +1,78 @@
+@model ManageCoffee.Models.User
+
+@{
+    ViewData["Title"] = "Tạo tài khoản";
+}
+
+<section class="row justify-content-center align-items-center">
+    <div class="col-7">
+        <div class="container card me-5 p-5 shadow-lg">
+            <h3 class="fw-bold">Tạo tài khoản mới</h3>
+            <hr>
+            <form asp-action="Create" method="post" id="user-form" class="save-form">
+                <div class="p-5">
+                    <div class="row">
+                        <input type="hidden" asp-for="UserId" value="0">
+                        <span asp-validation-for="UserId" class="text-danger"></span>
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label fw-bold">Tên người dùng</label>
+                            <input type="text" class="form-control" asp-for="Name" placeholder="Nhập tên tài khoản">
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label fw-bold">Email</label>
+                            <input type="text" class="form-control" asp-for="Email" placeholder="Nhập email">
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Phone" class="form-label fw-bold">Số điện thoại</label>
+                            <input type="text" class="form-control" asp-for="Phone" placeholder="Nhập số điện thoại">
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label fw-bold">Mật khẩu</label>
+                            <div class="d-flex align-items-center">
+                                <input type="password" class="form-control visibility" asp-for="Password"
+                                    placeholder="Nhập mật khẩu">
+                                <label for="checkVisible" style="margin-left: -5%;"><i
+                                        class="bi bi-eye-fill cursor-pointer"></i></label>
+                                <input type="checkbox" class="d-none" id="checkVisible" onclick="visibilityFunction()">
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Role" class="form-label fw-bold">Vai trò</label>
+                            <select asp-for="Role" class="form-select user-role">
+                                <option selected hidden disabled>-- Chọn chức vụ --</option>
+                                <option value="3">Nhân viên</option>
+                                <option value="2">Chủ quán</option>
+                            </select>
+                            <span asp-validation-for="Role" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-6 d-flex justify-content-start">
+                            <a asp-action="Index" class="btn btn-outline-primary border border-0"><i
+                                    class="bi bi-arrow-left-circle h2"></i></a>
+                        </div>
+                        <div class="col-6 d-flex justify-content-end align-items-center">
+                            <button type="submit" id="user-submit"
+                                class="btn btn-primary fw-bold py-2 px-4">Tạo</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $.get('/User/GetUserInfo', function (data) {
+            if (data.role == 1) {
+                $('#user-form').find($('.user-role')).append('<option value="1">Admin</option>')
+            };
+        })
+    </script>
+}
