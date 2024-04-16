@@ -1,0 +1,191 @@
+.offcanvas .offcanvas-header {
+    z-index: 9999;
+}
+
+.offcanvas .sidebar-header .toggler {
+    display: none;
+}
+
+.offcanvas .btn-close {
+    width: .375rem;
+    height: .375rem;
+}
+
+.offcanvas .sidebar-wrapper {
+    width: 380px;
+    background-color: transparent;
+}
+
+.offcanvas .sidebar-wrapper .sidebar-header img {
+    width: 70%;
+}
+
+#sidebar.active .sidebar-wrapper {
+    left: 0
+}
+
+#sidebar:not(.active) .sidebar-wrapper {
+    left: -300px
+}
+
+#sidebar:not(.active)~#main {
+    margin-left: 0
+}
+
+.sidebar-wrapper {
+    width: 300px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    z-index: 10;
+    overflow-y: auto;
+    background-color: hsl(0, 0%, 100%);
+    bottom: 0;
+    transition: left .5s ease-out
+}
+
+.sidebar-wrapper .sidebar-header {
+    padding: 2rem 2rem 1rem;
+    font-size: 2rem;
+    font-weight: 700
+}
+
+.sidebar-wrapper .sidebar-header img {
+    aspect-ratio: 3;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.sidebar-wrapper .sidebar-toggler.x {
+    position: absolute;
+    right: 0;
+    top: .5rem;
+    display: none
+}
+
+.sidebar-wrapper .menu {
+    margin-top: 2rem;
+    padding: 0 2rem;
+    font-weight: 600
+}
+
+.sidebar-wrapper .menu .sidebar-title {
+    padding: 0 1rem;
+    margin: 1.5rem 0 1rem;
+    font-size: 1rem;
+    list-style: none;
+    font-weight: 600;
+    color: hsl(24, 49%, 50%)
+}
+
+.sidebar-wrapper .menu .sidebar-link {
+    display: block;
+    padding: .7rem 1rem;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    border-radius: .5rem;
+    transition: all .5s;
+    text-decoration: none;
+    color: hsl(24, 49%, 50%)
+}
+
+.sidebar-wrapper .menu .sidebar-link i,
+.sidebar-wrapper .menu .sidebar-link svg {
+    color: hsl(22, 28%, 60%)
+}
+
+.sidebar-wrapper .menu .sidebar-link span {
+    margin-left: 1rem
+}
+
+.sidebar-wrapper .menu .sidebar-link:hover {
+    background-color: hsl(30, 20%, 95%)
+}
+
+.sidebar-wrapper .menu .sidebar-item {
+    list-style: none;
+    margin-top: .5rem;
+    position: relative
+}
+
+.sidebar-wrapper .menu .sidebar-item.main .sidebar-link {
+    background-color: hsl(40, 7%, 95%)
+}
+
+.sidebar-wrapper .menu .sidebar-item.main.active .sidebar-link {
+    background-color: hsl(24, 29%, 50%)
+}
+
+.sidebar-wrapper .menu .sidebar-item.has-sub .sidebar-link:after {
+    content: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><path stroke-width="1" d="M6 9l6 6 6-6"/></svg>');
+    position: absolute;
+    stroke: hsl(0, 0%, 80%);
+    right: 15px;
+    top: 12px;
+    display: block
+}
+
+.sidebar-wrapper .menu .sidebar-item.active .sidebar-link {
+    background-color: hsl(24, 29%, 50%)
+}
+
+.sidebar-wrapper .menu .sidebar-item.active .sidebar-link span {
+    color: hsl(0, 0%, 100%)
+}
+
+.sidebar-wrapper .menu .sidebar-item.active .sidebar-link i,
+.sidebar-wrapper .menu .sidebar-item.active .sidebar-link svg {
+    fill: hsl(0, 0%, 100%);
+    color: hsl(0, 0%, 100%)
+}
+
+.sidebar-wrapper .menu .sidebar-item.active .sidebar-link.has-sub:after {
+    content: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><path stroke="%23fff" stroke-width="1" d="M6 9l6 6 6-6"/></svg>')
+}
+
+.sidebar-wrapper .menu .submenu {
+    list-style: none;
+    display: none;
+    transition: max-height 2s cubic-bezier(0, .55, .45, 1);
+    overflow: hidden
+}
+
+.sidebar-wrapper .menu .submenu.active {
+    max-height: 999px;
+    display: block
+}
+
+.sidebar-wrapper .menu .submenu .submenu-item.active {
+    position: relative
+}
+
+.sidebar-wrapper .menu .submenu .submenu-item.active>a {
+    color: hsl(24, 29%, 50%);
+    font-weight: 700
+}
+
+.sidebar-wrapper .menu .submenu .submenu-item a {
+    padding: .7rem 2rem;
+    display: block;
+    color: hsl(24, 49%, 50%);
+    font-size: .85rem;
+    font-weight: 600;
+    letter-spacing: .5px;
+    transition: all .3s
+}
+
+.sidebar-wrapper .menu .submenu .submenu-item a:hover {
+    margin-left: .3rem
+}
+
+@media screen and (max-width:1199px) {
+    .sidebar-wrapper {
+        position: absolute;
+        left: -300px
+    }
+
+    .sidebar-wrapper .sidebar-toggler.x {
+        display: block
+    }
+}
