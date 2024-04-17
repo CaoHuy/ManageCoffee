@@ -39,7 +39,7 @@ namespace ManageCoffee.Controllers
                 name = "<a class='btn btn-link text-decoration-none' href='/Product/Edit/" + p.ProductId + "'>" + p.Name + " </ a >",
                 unit = p.Unit,
                 price = p.Price,
-                catalogue = p.getCatalogueName(),
+                catalogue = p.Catalogue.Name,
                 image = p.Image,
                 action = "<form action='/Product/Delete' method='POST' class='save-form'><input type='hidden' name='id' value='" + p.ProductId + "' data-id='" + p.ProductId + "'/> <button type='button' class='btn btn-link text-decoration-none btn-remove-product'><i class='bi bi-trash3'></i></button></form>"
             });

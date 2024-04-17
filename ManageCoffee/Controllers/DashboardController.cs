@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using ManageCoffee.DAO;
 using ManageCoffee.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -31,6 +32,7 @@ namespace ManageCoffee.Controllers
         {
             try
             {
+                OrderDAO dao = new OrderDAO();
                 List<int> list = new List<int> { };
                 var dateRange = range.Split(" - ");
                 var start = DateTime.ParseExact(dateRange[0], "d/M/yyyy", CultureInfo.InvariantCulture);
@@ -47,7 +49,7 @@ namespace ManageCoffee.Controllers
                 }
                 return Json(new
                 {
-                    numberProducts = new OrderDAO().getNumberProduct(list),
+                    numberProducts = dao.getNumberProduct(list),
                     DailiRevenues = orders,
                 });
             }
