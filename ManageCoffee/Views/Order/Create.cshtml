@@ -1,0 +1,138 @@
+@model ManageCoffee.Models.Order
+
+@{
+    ViewData["Title"] = "Tạo đơn hàng";
+}
+
+<section class="row justify-content-center align-items-center">
+    <div class="col-12">
+        <div class="container card me-5 p-2 p-md-5 shadow-lg">
+            <h3 class="fw-bold">Thêm đơn hàng mới</h3>
+            <hr>
+            <form asp-controller="Order" asp-action="Create" method="post" id="order-form" class="save-form"
+                accept-charset="UTF-8">
+                <div class="py-4 px-3">
+                    <div class="row">
+                        <input type="hidden" asp-for="OrderId">
+                        <span asp-validation-for="OrderId" class="text-danger"></span>
+                        <div class="mx-1 mx-lg-3 order-header">
+                            <div class="row justify-content-end align-items-center">
+                                <div class="col-6 col-lg-3 d-flex align-items-center">
+                                    <h5 class="text-primary my-0">Mã đơn</h5>
+                                    <span class="text-dark fs-5 ms-2 my-0 order-id"></span>
+                                </div>
+                                <div class="col-6 col-lg-4 d-flex align-items-center">
+                                    <h5 class="text-primary my-0">Thu ngân</h5>
+                                    <span class="text-dark fs-5 ms-2 my-0" id="cashier-name"></span>
+                                    <input type="text" asp-for="UserId" id="cashier-id" value="1">
+                                </div>
+                                <div class="d-flex col-6 col-lg-5 px-0 mt-md-3 mt-lg-0">
+                                    <div class="row w-100 algin-items-center">
+                                        <div class="col-md-3 d-none d-md-block">
+                                            <h5 class="text-primary my-0 me-2">Chọn bàn</h5>
+                                        </div>
+                                        <div class="col-12 col-md-9">
+                                            <select id="order-table" asp-for="TableId" class="form-select">
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input asp-for="Status" value="0" type="text">
+                                <input asp-for="CreatedAt" value="2024-04-16" type="date">
+                                <div class="col-6 d-flex justify-content-end align-items-center p-0 mt-3 mb-3 mb-md-0">
+                                    <button class="btn btn-outline-primary btn-add-product" type="button"
+                                        data-bs-toggle="tooltip" data-bs-title="Thêm món">
+                                        <i class="bi bi-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-4 d-none d-lg-flex">
+                            <div class="col-4 fw-bold text-center">Tên món</div>
+                            <div class="col-2 fw-bold text-center">Giá</div>
+                            <div class="col-2 fw-bold text-center">Số lượng</div>
+                            <div class="col-2 fw-bold text-center">Thành tiền</div>
+                        </div>
+                        <hr class="px-5">
+                        <div id="order-details"></div>
+                        <hr class="px-5">
+                        <div class="row justify-content-end">
+                            <div class="col-12 col-lg-6 text-end me-lg-4 order-calc-fee d-none"></div>
+                            <div class="col-12 col-lg-6 text-end me-lg-4 order-calc-discount"></div>
+                            <div class="col-12 col-lg-6 text-end me-lg-4">
+                                <input type="hidden" asp-for="TotalPrice" class="bill-total">
+                                Tổng giá trị đơn hàng:<span class="order-summary ms-2"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6 d-flex justify-content-start">
+                        <a asp-action="Index" class="btn btn-outline-primary border border-0"><i
+                                class="bi bi-arrow-left-circle h2"></i></a>
+                    </div>
+                    <div class="col-6 d-flex justify-content-end align-items-center">
+                        <button type="submit" class="btn btn-primary fw-bold py-2 px-4">Tạo</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+        @* $.get('/User/GetUserInfo', function (data) {
+            var form = $('#order-form')
+            form.find('#cashier-name').text(data.name)
+            form.find('#cashier-id').val(data.id)
+            })
+
+            $.get('/Table/GetTableFree', function (data) {
+            $(`[name=TableId]`).empty();
+            var str = `<option selected hidden disabled>Chọn bàn</option>`
+            $.each(data, function (index, table) {
+            str += `<option value="${table.id}">${table.name}</option>`
+            });
+            $(`[name=TableId]`).append(str);
+            }) *@
+
+                $(document).on('change', '.order-product', function () {
+                    $(this).parents('#order-form').find('.btn-pay').addClass('d-none');
+                    const detail = $(this).parents('.order-detail');
+                    const value = $(this).find(':selected').attr('data-price')
+                    detail.find('.order-price').text(number_format(value));
+                    detail.find('.order-quantity').removeAttr('disabled').val(1);
+                    detail.find('.btn-print').removeAttr('disabled');
+                    calcBill();
+                });
+
+            $(document).on('change keyup', '.order-quantity', function () {
+                $(this).parents('#order-form').find('.btn-pay').addClass('d-none');
+                var inputValue = $(this).val();
+                $(this).val((inputValue >= 1) ? inputValue : 1)
+                calcBill()
+            });
+
+            $(document).on('click', '.btn-cancel', function () {
+                var index = $(this).parents('.order-detail').attr('data-index');
+                $(this).parents('.order-detail').next().remove();
+                $(this).parents('.order-detail').remove();
+                $('.order-detail').each(function () {
+                    var index_current = parseInt($(this).attr('data-index'));
+                    if (index_current > index) {
+                        $(this).attr('data-index', index_current - 1);
+                        $(this).find('.order-product').attr('name', `details[${index_current - 1}].ProductId`);
+                        $(this).find('.detail-order-id').attr('name', `details[${index_current - 1}].OrderId`);
+                        $(this).find('.order-quantity').attr('name', `details[${index_current - 1}].Quantity`);
+                        $(this).find('.display-price').next().attr('name', `details[${index_current - 1}].Price`);
+                        $(this).next().find('.order-note').attr('name', `details[${index_current - 1}].Note`);
+                    }
+                })
+                calcBill();
+            })
+        });
+    </script>
+}
