@@ -22,22 +22,5 @@ namespace ManageCoffee.Models
 
         public virtual Catalogue Catalogue { get; set; }
         public virtual ICollection<Detail> Details { get; set; }
-        public string getCatalogueName()
-        {
-            var name = "";
-            switch (this.CatalogueId)
-            {
-                case 1:
-                    name = "Đồ uống";
-                    break;
-                case 2:
-                    name = "Đồ ăn";
-                    break;
-                default:
-                    name = "Món khác";
-                    break;
-            }
-            return name;
-        }
     }
 }

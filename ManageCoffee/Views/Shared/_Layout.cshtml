@@ -297,35 +297,36 @@
         $(".submenu-item.active").parents(".submenu").addClass("d-block active").parents(".has-sub").addClass("active");
 
 
-        @* $.get('/User/GetUserInfo', function (data) {
+    @* $.get('/User/GetUserInfo', function (data) {
             $('.auth-name').text(data.name)
             switch (data.role) {
-                case 1:
-                    $('.auth-role').text('Admin');
-                    break;
-                case 2:
-                    $('.auth-role').text('Chủ quán');
-                    break;
-                default:
-                    $('.auth-role').text('Nhân viên');
-                    $('.setting').empty();
-                    break;
+            case 1:
+            $('.auth-role').text('Admin');
+            break;
+            case 2:
+            $('.auth-role').text('Chủ quán');
+            break;
+            default:
+            $('.auth-role').text('Nhân viên');
+            $('.setting').empty();
+            break;
             }
             $('.hello-auth').text('Chào bạn, ' + data.name)
         }) *@
 
-        $(document).on('click', '.btn-add-product', function () {
-            $(this).parents('#order-form').find('.btn-pay').addClass('d-none');
-            const index = $('.order-product').length;
-            $.get('/Product/Load', function (data) {
-                var str = `<div class="row order-detail mb-2" data-index="${index}">
+            $(document).on('click', '.btn-add-product', function () {
+                $(this).parents('#order-form').find('.btn-pay').addClass('d-none');
+                const index = $('.order-product').length;
+                $.get('/Product/Load', function (data) {
+                    console.log(data.products)
+                    var str = `<div class="row order-detail mb-2" data-index="${index}">
                             <div class="col-12 col-lg-4">
                                 <select name="details[${index}].ProductId" id="order-products-${index + 1}" class="form-control form-select rounded-2 order-product mb-1 mb-lg-0">
                                     <option value="" selected hidden disabled>Chọn món</option>`;
-                $.each(data.products, function (key, product) {
-                    str += `<option value="${product.id}" data-price="${product.price}">${product.name}</option>`
-                });
-                str += ` </select>
+                    $.each(data.products, function (key, product) {
+                        str += `<option value="${product.productId}" data-price="${product.price}">${product.name}</option>`
+                    });
+                    str += ` </select>
                             </div>
                                 <div class="col-4 col-lg-2">
                                     <input type="hidden" name="details[${index}].OrderId" value="1" class="detail-order-id">
@@ -345,9 +346,9 @@
                             <div class="d-flex align-items-center mb-5">
                                 <input type="text" name="details[${index}].Note" class="form-control small order-note w-100" placeholder="Ghi chú">
                             </div>`
-                $('#order-details').append(str)
+                    $('#order-details').append(str)
+                })
             })
-        })
 
         $(document).on('click', '.btn-remove', function (e) {
             e.preventDefault();

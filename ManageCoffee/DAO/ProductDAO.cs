@@ -4,8 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ManageCoffee.Models;
 
-
-namespace MCF.DAO
+namespace ManageCoffee.DAO
 {
     public class ProductDAO
     {
