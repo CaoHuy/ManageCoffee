@@ -84,11 +84,28 @@
                                     <span>Quản lý đơn hàng</span>
                                 </a>
                             </li>
-                            <li class="sidebar-item @(ViewBag.IsActive == "product" ? "active" : "")">
-                                <a asp-controller="Product" asp-action="Index" class='sidebar-link'>
+                            @* <li class="sidebar-item @(ViewBag.IsActive == "product" ? "active" : "")">
+                            <a asp-controller="Product" asp-action="Index" class='sidebar-link'>
+                            <i class="icon-mid d-flex algin-items-center bi bi-cup-hot-fill"></i>
+                            <span>Quản lý sản phẩm</span>
+                            </a>
+                            </li> *@
+                            <li class="sidebar-item has-sub setting">
+                                <a class='sidebar-link cursor-pointer'>
                                     <i class="icon-mid d-flex algin-items-center bi bi-cup-hot-fill"></i>
                                     <span>Quản lý sản phẩm</span>
                                 </a>
+                                <ul class="submenu">
+                                    <li class="submenu-item @(ViewBag.IsActive == "product" ? "active" : "")">
+                                        <a class="text-decoration-none" asp-controller="Product" asp-action="Index">
+                                            <span>Sản phẩm</span>
+                                        </a>
+                                    </li>
+                                    <li class="submenu-item @(ViewBag.IsActive == "catelogue" ? "active" : "")">
+                                        <a class="text-decoration-none" asp-controller="Catelogue"
+                                            asp-action="Index">Danh mục</a>
+                                    </li>
+                                </ul>
                             </li>
                             <li class="sidebar-item has-sub setting">
                                 <a class='sidebar-link cursor-pointer'>
