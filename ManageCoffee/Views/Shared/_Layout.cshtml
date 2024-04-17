@@ -53,7 +53,7 @@
                             </li>
                             <hr>
                             <li class="sidebar-item @(ViewBag.IsActive == "dashboard" ? "active" : "")">
-                                <a asp-controller="Home" asp-action="Index" class='sidebar-link'>
+                                <a asp-controller="Dashboard" asp-action="Index" class='sidebar-link'>
                                     <i class="bi bi-bar-chart-line"></i>
                                     <span>Bảng tin</span>
                                 </a>
@@ -297,7 +297,7 @@
         $(".submenu-item.active").parents(".submenu").addClass("d-block active").parents(".has-sub").addClass("active");
 
 
-        $.get('/User/GetUserInfo', function (data) {
+        @* $.get('/User/GetUserInfo', function (data) {
             $('.auth-name').text(data.name)
             switch (data.role) {
                 case 1:
@@ -312,7 +312,7 @@
                     break;
             }
             $('.hello-auth').text('Chào bạn, ' + data.name)
-        })
+        }) *@
 
         $(document).on('click', '.btn-add-product', function () {
             $(this).parents('#order-form').find('.btn-pay').addClass('d-none');
