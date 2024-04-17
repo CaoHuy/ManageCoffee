@@ -48,7 +48,7 @@ namespace MCF.Controllers
             });
         }
 
-        public ActionResult getProduct(int id)
+        public ActionResult GetProduct(int id)
         {
             var product = ProductDAO.Instance.GetProductByID(id);
             if (product == null)
@@ -99,7 +99,7 @@ namespace MCF.Controllers
                     }
                     ProductDAO.Instance.AddNew(product);
                     var dbContext = new ManageCoffeeContext();
-                   
+
                     dbContext.SaveChanges();
                 }
                 return RedirectToAction("Index");
@@ -140,7 +140,7 @@ namespace MCF.Controllers
                 {
                     return View("Index", product);
                 }
-                if (imageFile != null && imageFile.Length > 0 )
+                if (imageFile != null && imageFile.Length > 0)
                 {
                     // Lưu ảnh vào thư mục wwwroot/images
                     var uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "img");
@@ -164,7 +164,7 @@ namespace MCF.Controllers
                     }
                 }
                 User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
-                ProductDAO.Instance.Update(product);    
+                ProductDAO.Instance.Update(product);
                 var dbContext = new ManageCoffeeContext();
                 // SettingDAO dao = new SettingDAO();
                 // dao.AddNew(new Log
