@@ -171,13 +171,13 @@ namespace ManageCoffee.DAO
             }
         }
 
-        public bool IsAreaExists(string areaName)
+        public bool IsAreaExists(int? areaId)
         {
             try
             {
                 using (var context = new ManageCoffeeContext())
                 {
-                    return context.Tables.Any(t => t.Area == areaName);
+                    return context.Tables.Any(t => t.AreaId == areaId);
                 }
             }
             catch (Exception ex)
@@ -185,6 +185,22 @@ namespace ManageCoffee.DAO
                 throw new Exception("Error checking for existing area: " + ex.Message);
             }
         }
+
+        public bool IsTableAndAreaExists(string tableName, int? areaId)
+        {
+            try
+            {
+                using (var context = new ManageCoffeeContext())
+                {
+                    return context.Tables.Any(t => t.Name == tableName && t.AreaId == areaId);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error checking for existing table and area: " + ex.Message);
+            }
+        }
+
 
     }
 }

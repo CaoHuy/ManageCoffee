@@ -8,9 +8,7 @@ using Microsoft.Extensions.Logging;
 using ManageCoffee.DAO;
 using ManageCoffee.Models;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace ManageCoffee.Controllers
@@ -31,7 +29,7 @@ namespace ManageCoffee.Controllers
             var data = tables.Select(t => new
             {
                 name = "<a class='btn btn-link text-decoration-none' href='/Table/Edit/" + t?.TableId + "'>" + t?.Name + " </ a > ",
-                area = t?.Area,
+                area = GetAreaNameById(t?.AreaId),
                 note = t?.Note,
                 status = t?.GetStatus(),
                 action = "<form action='/Table/Delete' method='POST' class='save-form'><input type='hidden' name='id' value='" + t?.TableId + "' data-id='" + t?.TableId + "'/> <button type='submit' class='btn btn-link text-decoration-none btn-remove'><i class='bi bi-trash3'></i></button></form>"
@@ -52,16 +50,18 @@ namespace ManageCoffee.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (TableDAO.Instance.IsTableExists(table.Name) && TableDAO.Instance.IsAreaExists(table.Area))
+                if (TableDAO.Instance.IsTableExists(table.Name) && TableDAO.Instance.IsAreaExists(table.AreaId))
                 {
-                    // Nếu bàn và khu vực đã tồn tại, thêm thông báo lỗi vào ModelState
+                    // Nếu cả bàn và khu vực đều tồn tại, thêm thông báo lỗi vào ModelState
                     ModelState.AddModelError("Name", "Bàn và khu vực đã tồn tại.");
                     ModelState.AddModelError("Area", "Bàn và khu vực đã tồn tại.");
+
                     var areas = AreaDAO.Instance.GetAreaList();
                     ViewBag.Areas = areas;
                     // Trả về view với dữ liệu table để người dùng có thể nhập lại
                     return View(table);
                 }
+
                 TableDAO.Instance.AddNew(table);
                 User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
                 var dbContext = new ManageCoffeeContext();
@@ -99,50 +99,79 @@ namespace ManageCoffee.Controllers
             return View("Edit", table);
         }
 
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, Table table)
         {
             try
             {
-                var existingTable = TableDAO.Instance.GetTableByID(id);
-                if (existingTable != null && existingTable.Name == table.Name && existingTable.Area == table.Area && existingTable.Note == table.Note)
+                if (ModelState.IsValid)
                 {
-                    System.Console.WriteLine(id + " " + Json(table));
-                    table.TableId = id;
-                    User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
-                    var dbContext = new ManageCoffeeContext();
-                    TableDAO.Instance.Update(table);
-                    // LogDAO dao = new LogDAO();
-                    // dao.AddNew(new Log
-                    // {
-                    //     Id = 0,
-                    //     UserId = user.Id,
-                    //     Action = "Đã cập nhật",
-                    //     Object = "Bàn",
-                    //     ObjectId = table.Id,
-                    // });
-                    dbContext.SaveChanges();
-                    return RedirectToAction(nameof(Index));
+                    // Lấy thông tin bàn hiện tại từ cơ sở dữ liệu
+                    var existingTable = TableDAO.Instance.GetTableByID(id);
+
+                    // Kiểm tra xem bàn tồn tại hay không
+                    if (existingTable != null)
+                    {
+                        // Kiểm tra xem thông tin mới đã thay đổi so với thông tin hiện tại hay không
+                        if (existingTable.Name == table.Name && existingTable.AreaId == table.AreaId)
+                        {
+                            table.TableId = id;
+                            TableDAO.Instance.Update(table);
+                            var dbContext = new ManageCoffeeContext();
+                            dbContext.SaveChanges();
+                            return RedirectToAction(nameof(Index));
+                        }
+                        else
+                        {
+                            if (TableDAO.Instance.IsTableAndAreaExists(table.Name, table.AreaId))
+                            {
+                                ModelState.AddModelError("Name", "Bàn và khu vực đã tồn tại.");
+                                ModelState.AddModelError("AreaId", "Bàn và khu vực đã tồn tại.");
+                                var areas = AreaDAO.Instance.GetAreaList();
+                                ViewBag.Areas = areas;
+                                return View(table);
+                            }
+                            else
+                            {
+                                table.TableId = id;
+                                TableDAO.Instance.Update(table);
+
+                                // Lưu thay đổi vào cơ sở dữ liệu
+                                var dbContext = new ManageCoffeeContext();
+                                dbContext.SaveChanges();
+
+                                // Chuyển hướng đến trang danh sách bàn
+                                return RedirectToAction(nameof(Index));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // Nếu không tìm thấy bàn trong cơ sở dữ liệu, trả về NotFound
+                        return NotFound();
+                    }
                 }
                 else
                 {
-                    // Nếu bàn và khu vực đã tồn tại, thêm thông báo lỗi vào ModelState
-                    ModelState.AddModelError("Name", "Bàn và khu vực đã tồn tại.");
-                    ModelState.AddModelError("Area", "Bàn và khu vực đã tồn tại.");
+                    // Nếu ModelState không hợp lệ, trả về view với dữ liệu table để người dùng có thể nhập lại
                     var areas = AreaDAO.Instance.GetAreaList();
                     ViewBag.Areas = areas;
-                    // Trả về view với dữ liệu table để người dùng có thể nhập lại
                     return View(table);
                 }
             }
             catch (Exception ex)
             {
+                // Xử lý ngoại lệ và trả về view với thông báo lỗi
                 var tableList = TableDAO.Instance.GetTableList();
                 ViewBag.Message = ex.Message;
                 return View("Index", tableList);
             }
         }
+
+
+
 
         [HttpPost]
         public ActionResult Delete(int id)
@@ -195,6 +224,18 @@ namespace ManageCoffee.Controllers
                 };
                 return Json(response);
             }
+        }
+        public string GetAreaNameById(int? areaId)
+        {
+            if (areaId.HasValue)
+            {
+                using (var context = new ManageCoffeeContext())
+                {
+                    var area = context.Areas.Find(areaId);
+                    return area?.Name ?? "Không có";
+                }
+            }
+            return "Không có";
         }
     }
 }

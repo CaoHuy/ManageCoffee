@@ -14,8 +14,8 @@
                 accept-charset="UTF-8" enctype="multipart/form-data">
                 <div class="p-5">
                     <div class="row">
-                        <input type="hidden" asp-for="Id" value="0">
-                        <span asp-validation-for="Id" class="text-danger"></span>
+                        <input type="hidden" asp-for="TableId" value="0">
+                        <span asp-validation-for="TableId" class="text-danger"></span>
                         <div class="mb-3">
                             <label asp-for="Name" class="form-label fw-bold">Tên bàn</label>
                             <div class="input-group">
@@ -25,16 +25,17 @@
                             <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
-                            <label asp-for="Area" class="form-label fw-bold">Khu vực</label>
-                            <select asp-for="Area" class="form-select" required>
+                            <label asp-for="AreaId" class="form-label fw-bold">Khu vực</label>
+                            <select asp-for="AreaId" class="form-select" required>
                                 <option value="">Chọn khu vực</option>
                                 @foreach (var area in ViewBag.Areas)
                                 {
-                                    <option value="@area.Name">@area.Name</option>
+                                    <option value="@area.AreaId">@area.Name</option>
                                 }
                             </select>
-                            <span asp-validation-for="Area" class="text-danger"></span>
+                            <span asp-validation-for="AreaId" class="text-danger"></span>
                         </div>
+
                         <div class="mb-3">
                             <label asp-for="Note" class="form-label fw-bold">Ghi chú</label>
                             <input type="text" class="form-control" asp-for="Note" placeholder="Nhập ghi chú">
