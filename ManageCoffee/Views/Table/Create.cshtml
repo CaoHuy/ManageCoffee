@@ -1,0 +1,66 @@
+@model ManageCoffee.Models.Table
+
+
+@{
+    ViewData["Title"] = "Tạo bàn";
+}
+
+<section class="row justify-content-center align-items-center">
+    <div class="col-7">
+        <div class="container card me-5 p-5 shadow-lg">
+            <h3 class="fw-bold">Thêm bàn mới</h3>
+            <hr>
+            <form asp-controller="Table" asp-action="Create" method="post" id="table-form" class="save-form"
+                accept-charset="UTF-8" enctype="multipart/form-data">
+                <div class="p-5">
+                    <div class="row">
+                        <input type="hidden" asp-for="TableId" value="0">
+                        <span asp-validation-for="TableId" class="text-danger"></span>
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label fw-bold">Tên bàn</label>
+                            <div class="input-group">
+                                <input required type="text" class="form-control" id="inputName" asp-for="Name"
+                                    placeholder="Nhập tên bàn">
+                            </div>
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="AreaId" class="form-label fw-bold">Khu vực</label>
+                            <select asp-for="AreaId" class="form-select" required>
+                                <option value="">Chọn khu vực</option>
+                                @foreach (var area in ViewBag.Areas)
+                                {
+                                    <option value="@area.AreaId">@area.Name</option>
+                                }
+                            </select>
+                            <span asp-validation-for="AreaId" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Note" class="form-label fw-bold">Ghi chú</label>
+                            <input type="text" class="form-control" asp-for="Note" placeholder="Nhập ghi chú">
+                            <span asp-validation-for="Note" class="text-danger"></span>
+                        </div>
+                        <input asp-for="Status" type="hidden" value="0">
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-6 d-flex justify-content-start">
+                            <a asp-action="Index" class="btn btn-outline-primary border border-0"><i
+                                    class="bi bi-arrow-left-circle h2"></i></a>
+                        </div>
+                        <div class="col-6 d-flex justify-content-end align-items-center">
+                            <button type="submit" class="btn btn-primary fw-bold py-2 px-4">Tạo</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+
+    </script>
+}
