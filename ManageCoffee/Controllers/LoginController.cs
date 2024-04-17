@@ -56,7 +56,7 @@ namespace ManageCoffee.Controllers
                     string userJson = Newtonsoft.Json.JsonConvert.SerializeObject(authenticatedUser);
                     session.SetString(key_access, userJson);
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Dashboard");
                 }
                 System.Console.WriteLine("That bai");
                 ViewData["Message"] = "Đăng nhập thất bại! Mật khẩu hoặc email không đúng!";
