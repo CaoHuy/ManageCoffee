@@ -1,0 +1,73 @@
+@model ManageCoffee.Models.Product
+
+@{
+    ViewData["Title"] = "Tạo sản phẩm";
+}
+
+<section class="row justify-content-center align-items-center">
+    <div class="col-9">
+        <div class="container card me-5 p-5 shadow-lg">
+            <h3 class="fw-bold">Tạo sản phẩm</h3>
+            <hr>
+            <form asp-controller="Product" asp-action="Create" method="post" id="product-form"
+                enctype="multipart/form-data">
+                <div class="p-sm-3 p-5">
+                    <div class="row">
+                        <div class="col-12 col-lg-6">
+                            <div class="card card-body mb-3 border border-primary select-image" onclick="selectFile(this)">
+                                <label for="imageFile" class="form-label cursor-pointer">
+                                    <div class="ratio ratio-1x1">
+                                        <img src="/img/placeholder.jpg" alt="Ảnh sản phẩm"
+                                            class="img-fluid rounded-4 object-fit-cover img-preview">
+                                    </div>
+                                </label>
+                                <input type="file" class="form-control d-none" name="imageFile" accept="image/*">
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <div class="mx-3 mb-3">
+                                <label class="col-form-label fs-6 fw-bold" asp-for="Name">Tên sản phẩm</label>
+                                <input type="text" class="form-control col-lg-9" asp-for="Name" placeholder="Nhập tên sản phẩm">
+                                <span asp-validation-for="Name" class="text-danger"></span>
+
+                            </div>
+                            <div class="mx-3 mb-3">
+                                <label asp-for="Catalogue" class="col-form-label fw-bold">Loại sản phẩm</label>
+                                <select asp-for="Catalogue" class="form-select text-justify">
+                                    <option selected disabled hidden>--- Chọn loại sản phẩm ---</option>
+                                    <option value="1">Đồ uống</option>
+                                    <option value="2">Đồ ăn</option>
+                                    <option value="3">Món khác</option>
+                                </select>
+                                <span asp-validation-for="Catalogue" class="text-danger"></span>
+                            </div>
+                            <div class="mx-3 mb-3">
+                                <label asp-for="Price" class="col-form-label fw-bold">Giá</label>
+                                <input type="text" class="form-control" asp-for="Price" placeholder="Nhập giá">
+                                <span asp-validation-for="Price" class="text-danger"></span>
+                            </div>
+                            <div class="mx-3 mb-3">
+                                <label asp-for="Unit" class="col-form-label fw-bold">Đơn vị tính</label>
+                                <input type="text" class="form-control" asp-for="Unit" placeholder="Nhập đơn vị tính">
+                                <span asp-validation-for="Unit" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-6 d-flex justify-content-start">
+                            <a asp-action="Index" class="btn btn-outline-primary border border-0"><i
+                                    class="bi bi-arrow-left-circle h2"></i></a>
+                        </div>
+                        <div class="col-6 d-flex justify-content-end align-items-center">
+                            <button type="submit" class="btn btn-primary fw-bold py-2">Xác nhận</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
