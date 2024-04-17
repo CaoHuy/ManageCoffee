@@ -20,5 +20,12 @@ namespace ManageCoffee.Models
 
         public virtual Area Area { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
+
+        public string GetStatus()
+        {
+            var stt = (this.Status == 0) ? "<p class='text-success status'>Trống</p>" : "<p class='text-danger status'>Có khách</p>";
+            return stt;
+
+        }
     }
 }

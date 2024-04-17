@@ -64,7 +64,7 @@ namespace ManageCoffee.Controllers
                 }
                 TableDAO.Instance.AddNew(table);
                 User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
-                var dbContext = new MCFContext();
+                var dbContext = new ManageCoffeeContext();
                 dbContext.SaveChanges();
                 ViewBag.IsActive = "table";
                 return RedirectToAction(nameof(Index));
@@ -78,7 +78,7 @@ namespace ManageCoffee.Controllers
 
         public ActionResult GetTableFree(Table table)
         {
-            var context = new MCFContext();
+            var context = new ManageCoffeeContext();
             var tables = context.Tables.Where(t => t.Status == 0).ToList();
             return Json(tables);
         }
@@ -109,9 +109,9 @@ namespace ManageCoffee.Controllers
                 if (existingTable != null && existingTable.Name == table.Name && existingTable.Area == table.Area && existingTable.Note == table.Note)
                 {
                     System.Console.WriteLine(id + " " + Json(table));
-                    table.Id = id;
+                    table.TableId = id;
                     User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
-                    var dbContext = new MCFContext();
+                    var dbContext = new ManageCoffeeContext();
                     TableDAO.Instance.Update(table);
                     // LogDAO dao = new LogDAO();
                     // dao.AddNew(new Log
@@ -164,7 +164,7 @@ namespace ManageCoffee.Controllers
                 {
                     TableDAO.Instance.Remove(id);
                     User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
-                    var dbContext = new MCFContext();
+                    var dbContext = new ManageCoffeeContext();
                     // LogDAO dao = new LogDAO();
                     // dao.AddNew(new Log
                     // {

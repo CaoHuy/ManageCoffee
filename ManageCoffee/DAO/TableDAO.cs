@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ManageCoffee.Models;
 
 namespace ManageCoffee.DAO
 {
@@ -29,7 +30,7 @@ namespace ManageCoffee.DAO
         {
             try
             {
-                using (var context = new MCFContext())
+                using (var context = new ManageCoffeeContext())
                 {
                     return context.Tables.Where(t => t.Name != "Deleted").ToList();
                 }
@@ -44,9 +45,9 @@ namespace ManageCoffee.DAO
         {
             try
             {
-                using (var context = new MCFContext())
+                using (var context = new ManageCoffeeContext())
                 {
-                    return context.Tables.FirstOrDefault(m => m.Id == tableId);
+                    return context.Tables.FirstOrDefault(m => m.TableId == tableId);
                 }
             }
             catch (Exception ex)
@@ -59,10 +60,10 @@ namespace ManageCoffee.DAO
         {
             try
             {
-                var existingTable = GetTableByID(table.Id);
+                var existingTable = GetTableByID(table.TableId);
                 if (existingTable == null)
                 {
-                    using (var context = new MCFContext())
+                    using (var context = new ManageCoffeeContext())
                     {
                         context.Tables.Add(table);
                         context.SaveChanges();
@@ -83,10 +84,10 @@ namespace ManageCoffee.DAO
         {
             try
             {
-                var existingTable = GetTableByID(table.Id);
+                var existingTable = GetTableByID(table.TableId);
                 if (existingTable != null)
                 {
-                    using (var context = new MCFContext())
+                    using (var context = new ManageCoffeeContext())
                     {
                         context.Tables.Update(table);
                         context.SaveChanges();
@@ -111,7 +112,7 @@ namespace ManageCoffee.DAO
                 var tableToRemove = GetTableByID(tableId);
                 if (tableToRemove != null)
                 {
-                    using (var context = new MCFContext())
+                    using (var context = new ManageCoffeeContext())
                     {
                         var orders = context.Orders.Where(o => o.TableId == tableId);
                         foreach (var order in orders)
@@ -137,11 +138,11 @@ namespace ManageCoffee.DAO
         {
             try
             {
-                using (var context = new MCFContext())
+                using (var context = new ManageCoffeeContext())
                 {
                     foreach (var tableId in tableIds)
                     {
-                        var tableToRemove = context.Tables.FirstOrDefault(t => t.Id == tableId);
+                        var tableToRemove = context.Tables.FirstOrDefault(t => t.TableId == tableId);
                         if (tableToRemove != null)
                         {
                             context.Tables.Remove(tableToRemove);
@@ -159,7 +160,7 @@ namespace ManageCoffee.DAO
         {
             try
             {
-                using (var context = new MCFContext())
+                using (var context = new ManageCoffeeContext())
                 {
                     return context.Tables.Any(t => t.Name == tableName);
                 }
@@ -174,7 +175,7 @@ namespace ManageCoffee.DAO
         {
             try
             {
-                using (var context = new MCFContext())
+                using (var context = new ManageCoffeeContext())
                 {
                     return context.Tables.Any(t => t.Area == areaName);
                 }
