@@ -49,40 +49,46 @@ namespace ManageCoffee.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(Order Order, List<Detail> details)
+        public ActionResult Create(IFormCollection request)
         {
-            try
+            Order order = new Order();
+            // User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
+            order.UserId = 1; // Fix lại thành user.UserId
+            order.Status = 0;
+            if (!string.IsNullOrEmpty(request["TableId"]))
             {
-                if (ModelState.IsValid)
-                {
-                    User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
-                    Order.UserId = user.UserId;
-                    OrderDAO.Instance.AddNew(Order);
-                    var table = dbContext.Tables.FirstOrDefault(t => t.TableId == Order.TableId);
-                    if (table != null)
-                    {
-                        table.Status = 1;
-                        dbContext.SaveChanges();
-                    }
-                    // IDetailRepository detailRepository = new DetailRepository();
-                    // LogDAO dao = new LogDAO();
-                    // dao.AddNew(new Log
-                    // {
-                    //     Id = 0,
-                    //     UserId = user.Id,
-                    //     Action = "Đã tạo",
-                    //     Object = "Đơn hàng",
-                    //     ObjectId = Order.Id,
-                    // });
-                    // dbContext.SaveChanges();
-                }
-                return RedirectToAction(nameof(Index));
+                order.TableId = int.Parse(request["TableId"]);
             }
-            catch (Exception ex)
+            order.TotalPrice = int.Parse(request["TotalPrice"]);
+            OrderDAO.Instance.AddNew(order);
+
+            //Tạo detail
+            for (int i = 0; i < request["quantity[]"].Count(); i++)
             {
-                ViewBag.Message = ex.Message;
-                return View(Order);
+                Detail detail = new Detail();
+                detail.OrderId = order.OrderId;
+                detail.ProductId = int.Parse(request["product_id[]"][i]);
+                detail.Quantity = int.Parse(request["quantity[]"][i]);
+                detail.Price = int.Parse(request["price[]"][i]);
+                DetailDAO.Instance.AddNew(detail);
             }
+            var table = dbContext.Tables.FirstOrDefault(t => t.TableId == order.TableId);
+            if (table != null)
+            {
+                table.Status = 1;
+                dbContext.SaveChanges();
+            }
+            // LogDAO dao = new LogDAO();
+            // dao.AddNew(new Log
+            // {
+            //     Id = 0,
+            //     UserId = user.Id,
+            //     Action = "Đã tạo",
+            //     Object = "Đơn hàng",
+            //     ObjectId = order.Id,
+            // });
+
+            return RedirectToAction(nameof(Index));
         }
 
         public ActionResult getOrder(int? id)

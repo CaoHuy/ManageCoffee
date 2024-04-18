@@ -319,9 +319,9 @@
                 const index = $('.order-product').length;
                 $.get('/Product/Load', function (data) {
                     console.log(data.products)
-                    var str = `<div class="row order-detail mb-2" data-index="${index}">
+                    var str = `<div class="row order-detail mb-2">
                             <div class="col-12 col-lg-4">
-                                <select name="details[${index}].ProductId" id="order-products-${index + 1}" class="form-control form-select rounded-2 order-product mb-1 mb-lg-0">
+                                <select name="product_id[]" id="order-products-${index + 1}" class="form-control form-select rounded-2 order-product mb-1 mb-lg-0">
                                     <option value="" selected hidden disabled>Chọn món</option>`;
                     $.each(data.products, function (key, product) {
                         str += `<option value="${product.productId}" data-price="${product.price}">${product.name}</option>`
@@ -329,22 +329,21 @@
                     str += ` </select>
                             </div>
                                 <div class="col-4 col-lg-2">
-                                    <input type="hidden" name="details[${index}].OrderId" value="1" class="detail-order-id">
                                     <span type="text" id="order-prices-${index + 1}" class="form-control border border-0 text-end order-price px-0" autocomplete="off"><span>
                                 </div>
                                 <div class="col-2 col-lg-2">
-                                    <input type="number" name="details[${index}].Quantity" id="order-quantities-${index + 1}" value="0" class="form-control border border-0 text-end order-quantity ps-0" inputmode="numeric" autocomplete="off" placeholder="Số lượng" disabled>
+                                    <input type="number" name="quantity[]" id="order-quantities-${index + 1}" value="0" class="form-control border border-0 text-end order-quantity ps-0" inputmode="numeric" autocomplete="off" placeholder="Số lượng" disabled>
                                 </div>
                                 <div class="col-3 col-lg-2 d-flex align-items-center justify-content-end">
                                     <div class="display-price"></div>
-                                    <input type="hidden" name="details[${index}].Price" id="order-price-${index + 1}" value="0" class="form-control border border-0 text-end order-price ps-0" autocomplete="off" readonly>
+                                    <input type="hidden" name="price[]" id="order-price-${index + 1}" value="0" class="form-control border border-0 text-end order-price ps-0" autocomplete="off" readonly>
                                 </div>
                                 <div class="col-3 col-lg-2 d-flex">
                                     <button type="button" class="btn btn-outline-secondary border border-0 btn-cancel rounded-2">&times;</button>
                                 </div>
                             </div>
                             <div class="d-flex align-items-center mb-5">
-                                <input type="text" name="details[${index}].Note" class="form-control small order-note w-100" placeholder="Ghi chú">
+                                <input type="text" name="note[]" class="form-control small order-note w-100" placeholder="Ghi chú">
                             </div>`
                     $('#order-details').append(str)
                 })

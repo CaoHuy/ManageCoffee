@@ -13,7 +13,7 @@
                 accept-charset="UTF-8">
                 <div class="py-4 px-3">
                     <div class="row">
-                        <input type="hidden" asp-for="OrderId">
+                        <input type="hidden" name="OrderId">
                         <span asp-validation-for="OrderId" class="text-danger"></span>
                         <div class="mx-1 mx-lg-3 order-header">
                             <div class="row justify-content-end align-items-center">
@@ -24,7 +24,7 @@
                                 <div class="col-6 col-lg-4 d-flex align-items-center">
                                     <h5 class="text-primary my-0">Thu ngân</h5>
                                     <span class="text-dark fs-5 ms-2 my-0" id="cashier-name"></span>
-                                    <input type="text" asp-for="UserId" id="cashier-id" value="1">
+                                    <input type="text" name="UserId" id="cashier-id" value="1">
                                 </div>
                                 <div class="d-flex col-6 col-lg-5 px-0 mt-md-3 mt-lg-0">
                                     <div class="row w-100 algin-items-center">
@@ -32,13 +32,11 @@
                                             <h5 class="text-primary my-0 me-2">Chọn bàn</h5>
                                         </div>
                                         <div class="col-12 col-md-9">
-                                            <select id="order-table" asp-for="TableId" class="form-select">
+                                            <select id="order-table" name="TableId" class="form-select">
                                             </select>
                                         </div>
                                     </div>
                                 </div>
-                                <input asp-for="Status" value="0" type="text">
-                                <input asp-for="CreatedAt" value="2024-04-16" type="date">
                                 <div class="col-6 d-flex justify-content-end align-items-center p-0 mt-3 mb-3 mb-md-0">
                                     <button class="btn btn-outline-primary btn-add-product" type="button"
                                         data-bs-toggle="tooltip" data-bs-title="Thêm món">
@@ -60,7 +58,7 @@
                             <div class="col-12 col-lg-6 text-end me-lg-4 order-calc-fee d-none"></div>
                             <div class="col-12 col-lg-6 text-end me-lg-4 order-calc-discount"></div>
                             <div class="col-12 col-lg-6 text-end me-lg-4">
-                                <input type="hidden" asp-for="TotalPrice" class="bill-total">
+                                <input type="hidden" name="TotalPrice" class="bill-total">
                                 Tổng giá trị đơn hàng:<span class="order-summary ms-2"></span>
                             </div>
                         </div>
