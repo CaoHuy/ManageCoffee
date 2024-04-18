@@ -32,7 +32,7 @@ namespace ManageCoffee.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=localhost;Database=ManageCoffee;uid=sa;pwd=12;encrypt=true;trustServerCertificate=true;");
+                optionsBuilder.UseSqlServer("Server=localhost;Database=ManageCoffee;uid=sa;pwd=10082003;encrypt=true;trustServerCertificate=true;");
             }
         }
 
@@ -106,13 +106,13 @@ namespace ManageCoffee.Models
                     .WithMany(p => p.Details)
                     .HasForeignKey(d => d.OrderId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Detail__order_id__34C8D9D1");
+                    .HasConstraintName("FK__Detail__order_id__47DBAE45");
 
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.Details)
                     .HasForeignKey(d => d.ProductId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Detail__product___35BCFE0A");
+                    .HasConstraintName("FK__Detail__product___48CFD27E");
             });
 
             modelBuilder.Entity<Log>(entity =>
@@ -143,7 +143,7 @@ namespace ManageCoffee.Models
                     .WithMany(p => p.Logs)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Log__user_id__398D8EEE");
+                    .HasConstraintName("FK__Log__user_id__4CA06362");
             });
 
             modelBuilder.Entity<Order>(entity =>
@@ -170,20 +170,20 @@ namespace ManageCoffee.Models
                     .HasColumnType("money")
                     .HasColumnName("total_price");
 
-                entity.Property(e => e.UpdatetedAt).HasColumnType("datetime");
+                entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
 
                 entity.Property(e => e.UserId).HasColumnName("user_id");
 
                 entity.HasOne(d => d.Table)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.TableId)
-                    .HasConstraintName("FK__Order__table_id__31EC6D26");
+                    .HasConstraintName("FK__Order__table_id__44FF419A");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Order__user_id__30F848ED");
+                    .HasConstraintName("FK__Order__user_id__440B1D61");
             });
 
             modelBuilder.Entity<Product>(entity =>
@@ -220,7 +220,7 @@ namespace ManageCoffee.Models
                 entity.HasOne(d => d.Catalogue)
                     .WithMany(p => p.Products)
                     .HasForeignKey(d => d.CatalogueId)
-                    .HasConstraintName("FK__Product__softDel__2D27B809");
+                    .HasConstraintName("FK__Product__softDel__403A8C7D");
             });
 
             modelBuilder.Entity<Table>(entity =>
@@ -245,7 +245,7 @@ namespace ManageCoffee.Models
                 entity.HasOne(d => d.Area)
                     .WithMany(p => p.Tables)
                     .HasForeignKey(d => d.AreaId)
-                    .HasConstraintName("FK__Table__area_id__2A4B4B5E");
+                    .HasConstraintName("FK__Table__area_id__3D5E1FD2");
             });
 
             modelBuilder.Entity<User>(entity =>

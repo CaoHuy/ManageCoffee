@@ -22,7 +22,7 @@ namespace ManageCoffee.Models
         public decimal TotalPrice { get; set; }
         public int? Revision { get; set; }
         public DateTime? CreatedAt { get; set; }
-        public DateTime? UpdatetedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
 
         public virtual Table Table { get; set; }
         public virtual User User { get; set; }
@@ -35,12 +35,12 @@ namespace ManageCoffee.Models
 
         public string getTableName()
         {
-            // if (this.TableId != null)
-            // {
-            //     TableDAO table = new TableDAO();
-            //     var name = table.GetTableByID(this.TableId).Name;
-            //     return name;
-            // }
+            if (this.TableId != null)
+            {
+                TableDAO table = new TableDAO();
+                var name = table.GetTableByID(this.TableId).Name;
+                return name;
+            }
             return "Mang đi";
         }
 
@@ -53,22 +53,22 @@ namespace ManageCoffee.Models
 
         public Table GetTable()
         {
-            // if (this.TableId != null)
-            // {
-            //     TableDAO dao = new TableDAO();
-            //     var table = dao.GetTableByID(this.TableId);
-            //     return table;
-            // }
-            // else
-            // {
-            return null;
-            // }
+            if (this.TableId != null)
+            {
+                TableDAO dao = new TableDAO();
+                var table = dao.GetTableByID(this.TableId);
+                return table;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public IEnumerable<Detail> GetDetail()
         {
             var context = new ManageCoffeeContext();
-            var details = context.Details.Where(detail => detail.OrderId == this.OrderId).ToList();
+            var details = context.Details.Where(d => d.OrderId == this.OrderId).ToList();
             return details;
         }
 
@@ -78,13 +78,12 @@ namespace ManageCoffee.Models
             var user = dao.GetUserByID(this.UserId);
             return user;
         }
-
         public void RemoveDetails()
         {
             var context = new ManageCoffeeContext();
-            var details = context.Details.Where(detail => detail.OrderId == this.OrderId).Select(detail => detail.DetailId).ToList();
-            // DetailDAO dao = new DetailDAO();
-            // dao.RemoveMultiple(details);
+            var details = context.Details.Where(d => d.OrderId == this.OrderId).Select(d => d.OrderId).ToList();
+            DetailDAO dao = new DetailDAO();
+            dao.RemoveMultiple(details);
         }
     }
 }
