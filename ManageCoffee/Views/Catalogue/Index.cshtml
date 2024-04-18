@@ -1,0 +1,103 @@
+@{
+    ViewData["Title"] = "Quản lý danh mục";
+}
+
+<div class="page-heading">
+    <div class="page-title">
+        <div class="row">
+            <div class="col-12 col-md-6 order-md-1 order-last">
+                <h3>@ViewData["Title"]</h3>
+            </div>
+            <div class="col-12 col-md-6 order-md-2 order-first d-flex justify-content-end align-items-end">
+                <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a asp-controller="Home">
+                                <p class="text-light-primary">Bảng tin</p>
+                            </a></li>
+                        <li class="breadcrumb-item text-dark active" aria-current="page">@ViewData["Title"]</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+<div class="page-content">
+    <div class="card p-4">
+        <div class="card-header bg-white">
+            <a class="btn btn-primary me-2" asp-controller="Catalogue" asp-action="Create">
+                <i class="bi bi-plus-circle-dotted"></i> Thêm</a>
+        </div>
+        <div class="card-body">
+            <form method="post" id="batch-form">
+                <div class="table-resposive">
+                    <table class="table table-hover" id="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tên danh mục</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        $(document).ready(function () {
+            const table = $('#data-table').DataTable({
+                processing: true,
+                serverSide: false,
+                ajax: {
+                    url: `/Catalogue/Load`,
+                    error: function (err) {
+                        if (err.status == 401 || err.status == 419) {
+                            console.warn(err.responseJSON.errors);
+                            window.location.href = "/Login/Index";
+                        } else {
+                            console.log('Error:', err);
+                            swal(`{{ __("ĐÃ CÓ LỖI XẢY RA!") }}`, err.responseJSON.$message, 'error');
+                        }
+                    },
+                },
+                columns: [
+                    {
+                        data: 'id',
+                        name: 'id'
+                    },
+                    {
+                        data: 'name',
+                        name: 'name'
+                    }, {
+                        data: 'action',
+                        name: 'action'
+                    },
+                ],
+                language: {
+                    "sProcessing": "Đang xử lý...",
+                    "sLengthMenu": "_MENU_   dòng / trang",
+                    "sZeroRecords": "Nội dung trong.",
+                    "sInfo": "Từ _START_ đến _END_ của _TOTAL_ mục",
+                    "sInfoEmpty": "Không có mục nào",
+                    "sInfoFiltered": "(được lọc từ _MAX_ mục)",
+                    'searchPlaceholder': "Tìm kiếm dữ liệu",
+                    "sInfoPostFix": "",
+                    "sSearch": "",
+                    "sUrl": "",
+                    "oPaginate": {
+                        "sFirst": "&laquo;",
+                        "sPrevious": "&lsaquo;",
+                        "sNext": "&rsaquo;",
+                        "sLast": "&raquo;",
+                    },
+                },
+                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Tất cả"]]
+            })
+        })
+    </script>
+}
