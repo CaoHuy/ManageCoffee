@@ -1,21 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using MCF.DAO;
+using ManageCoffee.DAO;
 using ManageCoffee.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.IO;
-using Microsoft.AspNetCore.Hosting;
 using Newtonsoft.Json;
 
-namespace MCF.Controllers
+namespace ManageCoffee.Controllers
 {
     public class ProductController : Controller
     {
+
         private readonly IWebHostEnvironment hostingEnvironment;
 
         public ProductController(IWebHostEnvironment environment)
@@ -23,8 +24,10 @@ namespace MCF.Controllers
             hostingEnvironment = environment;
         }
 
+
         public ActionResult Index()
         {
+            var catalogues = CatalogueDAO.Instance.GetCataloguesList();
             ViewBag.IsActive = "product";
             return View();
         }
@@ -37,7 +40,7 @@ namespace MCF.Controllers
                 name = "<a class='btn btn-link text-decoration-none' href='/Product/Edit/" + p.ProductId + "'>" + p.Name + " </ a >",
                 unit = p.Unit,
                 price = p.Price,
-                catalogue = p.getCatalogueName(),
+                catalogue = GetCatalogueNameById(p?.CatalogueId),
                 image = p.Image,
                 action = "<form action='/Product/Delete' method='POST' class='save-form'><input type='hidden' name='id' value='" + p.ProductId + "' data-id='" + p.ProductId + "'/> <button type='button' class='btn btn-link text-decoration-none btn-remove-product'><i class='bi bi-trash3'></i></button></form>"
             });
@@ -45,6 +48,7 @@ namespace MCF.Controllers
             return Json(new
             {
                 data = data,
+                products = products,
             });
         }
 
@@ -65,6 +69,8 @@ namespace MCF.Controllers
 
         public IActionResult Create()
         {
+            var catalogues = CatalogueDAO.Instance.GetCataloguesList();
+            ViewBag.Catalogues = catalogues;
             ViewBag.IsActive = "product";
             return View();
         }
@@ -76,6 +82,8 @@ namespace MCF.Controllers
             {
                 if (!ModelState.IsValid)
                 {
+                    var catalogue = CatalogueDAO.Instance.GetCataloguesList();
+                    ViewBag.Catalogues = catalogue;
                     return View(product);
                 }
                 else
@@ -98,8 +106,18 @@ namespace MCF.Controllers
                         product.Image = "/img/placeholder.jpg";
                     }
                     ProductDAO.Instance.AddNew(product);
+                    User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
                     var dbContext = new ManageCoffeeContext();
 
+                    // LogDAO dao = new LogDAO();
+                    // dao.AddNew(new Log
+                    // {
+                    //     Id = 0,
+                    //     UserId = user.Id,
+                    //     Action = "Đã tạo",
+                    //     Object = "Sản phẩm",
+                    //     ObjectId = product.Id,
+                    // });
                     dbContext.SaveChanges();
                 }
                 return RedirectToAction("Index");
@@ -111,22 +129,25 @@ namespace MCF.Controllers
                 return View(product);
             }
         }
-
-
+        
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-            var product = ProductDAO.Instance.GetProductByID(id.Value);
 
+            var product = ProductDAO.Instance.GetProductByID(id.Value);
             if (product == null)
             {
                 return NotFound();
             }
+
+            var catalogues = CatalogueDAO.Instance.GetCataloguesList();
+            ViewBag.Catalogues = catalogues;
             ViewBag.IsActive = "product";
-            return View(product);
+
+            return View("Edit", product);
         }
 
         [HttpPost]
@@ -135,48 +156,56 @@ namespace MCF.Controllers
         {
             try
             {
-                // Kiểm tra tính hợp lệ của dữ liệu đầu vào
-                if (!ModelState.IsValid)
+                if (ModelState.IsValid)
                 {
-                    return View("Index", product);
-                }
-                if (imageFile != null && imageFile.Length > 0)
-                {
-                    // Lưu ảnh vào thư mục wwwroot/images
-                    var uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "img");
-                    var uniqueFileName = Guid.NewGuid().ToString() + "_" + imageFile.FileName;
-                    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                    using (var fileStream = new FileStream(filePath, FileMode.Create))
-                    {
-                        imageFile.CopyTo(fileStream);
-                    }
+                    var existingProduct = ProductDAO.Instance.GetProductByID(id);
 
-                    // Cập nhật đường dẫn hình ảnh mới cho sản phẩm
-                    product.Image = "/img/" + uniqueFileName;
+                    // Kiểm tra xem sản phẩm cần cập nhật có tồn tại không
+                    if (existingProduct != null)
+                    {
+                        // Kiểm tra xem có tải lên tệp hình ảnh mới không
+                        if (imageFile != null && imageFile.Length > 0)
+                        {
+                            // Lưu ảnh vào thư mục wwwroot/images
+                            var uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "img");
+                            var uniqueFileName = Guid.NewGuid().ToString() + "_" + imageFile.FileName;
+                            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                            using (var fileStream = new FileStream(filePath, FileMode.Create))
+                            {
+                                imageFile.CopyTo(fileStream);
+                            }
+
+                            // Cập nhật đường dẫn hình ảnh mới cho sản phẩm
+                            product.Image = "/img/" + uniqueFileName;
+                        }
+                        else
+                        {
+                            // Nếu không có hình ảnh mới được tải lên, giữ nguyên đường dẫn hình ảnh cũ
+                            product.Image = existingProduct.Image;
+                        }
+
+                        // Cập nhật thông tin sản phẩm
+                        product.ProductId = id; // Đảm bảo rằng Id của sản phẩm không thay đổi
+                        ProductDAO.Instance.Update(product);
+
+                        var dbContext = new ManageCoffeeContext();
+                        dbContext.SaveChanges();
+
+                        return RedirectToAction(nameof(Index));
+                    }
+                    else
+                    {
+                        return NotFound(); // Trả về NotFound nếu sản phẩm không tồn tại
+                    }
                 }
                 else
                 {
-                    // Nếu không có hình ảnh mới được tải lên, giữ nguyên đường dẫn hình ảnh cũ
-                    var existingProduct = ProductDAO.Instance.GetProductByID(id);
-                    if (existingProduct != null)
-                    {
-                        product.Image = existingProduct.Image;
-                    }
+                    // ModelState không hợp lệ, trả về view với dữ liệu sản phẩm để người dùng có thể sửa lại
+                    var catalogues = CatalogueDAO.Instance.GetCataloguesList();
+                    ViewBag.Catalogues = catalogues;
+                    ViewBag.IsActive = "product";
+                    return View(product);
                 }
-                User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
-                ProductDAO.Instance.Update(product);
-                var dbContext = new ManageCoffeeContext();
-                // SettingDAO dao = new SettingDAO();
-                // dao.AddNew(new Log
-                // {
-                //     Id = 0,
-                //     UserId = user.Id,
-                //     Action = "Đã cập nhật",
-                //     Object = "Sản phẩm",
-                //     ObjectId = product.Id,
-                // });
-                dbContext.SaveChanges();
-                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
@@ -185,6 +214,8 @@ namespace MCF.Controllers
                 return View(product);
             }
         }
+
+
 
         [HttpPost]
         public ActionResult Delete(int id)
@@ -214,8 +245,8 @@ namespace MCF.Controllers
                         status = "success"
                     };
                     var dbContext = new ManageCoffeeContext();
-                    // SettingDAO dao = new SettingDAO();
-                    // dao.AddNew(new Config
+                    // LogDAO dao = new LogDAO();
+                    // dao.AddNew(new Log
                     // {
                     //     Id = 0,
                     //     UserId = user.Id,
@@ -236,7 +267,18 @@ namespace MCF.Controllers
                 };
                 return Json(response);
             }
-
+        }
+        public string GetCatalogueNameById(int? catalogueId)
+        {
+            if (catalogueId.HasValue)
+            {
+                using (var context = new ManageCoffeeContext())
+                {
+                    var catalogue = context.Catalogues.Find(catalogueId);
+                    return catalogue?.Name ?? "Không có";
+                }
+            }
+            return "Không có";
         }
     }
 }

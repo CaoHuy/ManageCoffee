@@ -138,7 +138,7 @@ namespace ManageCoffee.DAO
                 {
                     foreach (var Id in Ids)
                     {
-                        var DetailToRemove = context.Details.FirstOrDefault(u => u.DetailId == Id);
+                        var DetailToRemove = context.Details.FirstOrDefault(d => d.DetailId == Id);
                         if (DetailToRemove != null)
                         {
                             context.Details.Remove(DetailToRemove);

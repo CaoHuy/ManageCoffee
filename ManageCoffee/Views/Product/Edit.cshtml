@@ -28,17 +28,20 @@
                         <div class="col-12 col-lg-6">
                             <div class="mx-3 mb-3">
                                 <label class="col-form-label fs-6 fw-bold" asp-for="Name">Tên sản phẩm</label>
-                                <input type="text" class="form-control col-lg-9" asp-for="Name" placeholder="Nhập tên sản phẩm">
+                                <input type="text" class="form-control col-lg-9" asp-for="Name"
+                                    placeholder="Nhập tên sản phẩm">
                                 <span asp-validation-for="Name" class="text-danger"></span>
                             </div>
                             <div class="mx-3 mb-3">
-                                <label asp-for="Catalogue" class="col-form-label fw-bold">Loại sản phẩm</label>
-                                <select asp-for="Catalogue" class="form-select">
-                                    <option value="1">Đồ uống</option>
-                                    <option value="2">Đồ ăn</option>
-                                    <option value="3">Món khác</option>
+                                <label asp-for="CatalogueId" class="col-form-label fw-bold">Loại sản phẩm</label>
+                                <select asp-for="CatalogueId" class="form-select text-justify">
+                                    <option selected disabled hidden>--- Chọn loại sản phẩm ---</option>
+                                    @foreach (var catalogue in ViewBag.Catalogues)
+                                    {
+                                        <option value="@catalogue.CatalogueId">@catalogue.Name</option>
+                                    }
                                 </select>
-                                <span asp-validation-for="Catalogue" class="text-danger"></span>
+                                <span asp-validation-for="CatalogueId" class="text-danger"></span>
                             </div>
                             <div class="mx-3 mb-3">
                                 <label asp-for="Price" class="col-form-label fw-bold">Giá</label>

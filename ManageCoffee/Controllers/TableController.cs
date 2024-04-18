@@ -137,11 +137,9 @@ namespace ManageCoffee.Controllers
                             {
                                 table.TableId = id;
                                 TableDAO.Instance.Update(table);
-
                                 // Lưu thay đổi vào cơ sở dữ liệu
                                 var dbContext = new ManageCoffeeContext();
                                 dbContext.SaveChanges();
-
                                 // Chuyển hướng đến trang danh sách bàn
                                 return RedirectToAction(nameof(Index));
                             }

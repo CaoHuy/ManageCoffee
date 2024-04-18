@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using ManageCoffee.Models;
-
 
 namespace ManageCoffee.DAO
 {
@@ -66,7 +64,7 @@ namespace ManageCoffee.DAO
             {
                 using (var context = new ManageCoffeeContext())
                 {
-                    return context.Orders.FirstOrDefault(o => o.OrderId == Id);
+                    return context.Orders.FirstOrDefault(m => m.OrderId == Id);
                 }
             }
             catch (Exception ex)
@@ -156,28 +154,28 @@ namespace ManageCoffee.DAO
             }
         }
 
-        // public void RemoveMultiple(List<int> Ids)
-        // {
-        //     try
-        //     {
-        //         using (var context = new Coffee_ManagementContext())
-        //         {
-        //             foreach (var Id in Ids)
-        //             {
-        //                 var OrderToRemove = context.Orders.FirstOrDefault(u => u.Id == Id);
-        //                 if (OrderToRemove != null)
-        //                 {
-        //                     context.Orders.Remove(OrderToRemove);
-        //                 }
-        //             }
-        //             context.SaveChanges();
-        //         }
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         throw new Exception("Error removing Orders: " + ex.Message);
-        //     }
-        // }
+        public void RemoveMultiple(List<int> Ids)
+        {
+            try
+            {
+                using (var context = new ManageCoffeeContext())
+                {
+                    foreach (var Id in Ids)
+                    {
+                        var OrderToRemove = context.Orders.FirstOrDefault(u => u.OrderId == Id);
+                        if (OrderToRemove != null)
+                        {
+                            context.Orders.Remove(OrderToRemove);
+                        }
+                    }
+                    context.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error removing Orders: " + ex.Message);
+            }
+        }
 
         public decimal getNumberProduct(List<int> ints)
         {
@@ -193,7 +191,6 @@ namespace ManageCoffee.DAO
             }
             return numberProduct;
         }
-        
         public decimal GetDailyRevenues(DateTime startDate, DateTime endDate)
         {
             try

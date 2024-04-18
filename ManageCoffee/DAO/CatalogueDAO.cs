@@ -6,12 +6,12 @@ using ManageCoffee.Models;
 
 namespace ManageCoffee.DAO
 {
-    public class ProductDAO
+    public class CatalogueDAO
     {
-        private static ProductDAO instance = null;
+        private static CatalogueDAO instance = null;
         private static readonly object instanceLock = new object();
 
-        public static ProductDAO Instance
+        public static CatalogueDAO Instance
         {
             get
             {
@@ -19,7 +19,7 @@ namespace ManageCoffee.DAO
                 {
                     if (instance == null)
                     {
-                        instance = new ProductDAO();
+                        instance = new CatalogueDAO();
                     }
                     return instance;
                 }
@@ -27,123 +27,122 @@ namespace ManageCoffee.DAO
         }
 
 
-        public IEnumerable<Product> GetProductList()
+        public IEnumerable<Catalogue> GetCataloguesList()
         {
             try
             {
                 using (var context = new ManageCoffeeContext())
                 {
-                    return context.Products.ToList();
+                    return context.Catalogues.ToList();
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("Error retrieving product list: " + ex.Message);
+                throw new Exception("Error retrieving catalogue list: " + ex.Message);
             }
         }
 
-        public Product GetProductByID(int product_id)
+        public Catalogue GetCatalogueById(int catalogue_id)
         {
             try
             {
                 using (var context = new ManageCoffeeContext())
                 {
-                    return context.Products.FirstOrDefault(m => m.ProductId == product_id);
+                    return context.Catalogues.FirstOrDefault(m => m.CatalogueId == catalogue_id);
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("Error retrieving product by ID: " + ex.Message);
+                throw new Exception("Error retrieving catalogue by ID: " + ex.Message);
             }
         }
 
 
-        public void AddNew(Product product)
+        public void AddNew(Catalogue catalogue)
         {
             try
             {
-                var existingProduct = GetProductByID(product.ProductId);
-                if (existingProduct == null)
+                var existingCatalogue = GetCatalogueById(catalogue.CatalogueId);
+                if (existingCatalogue == null)
                 {
                     using (var context = new ManageCoffeeContext())
                     {
-                        System.Console.WriteLine(product.Price);
-                        context.Products.Add(product);
+                        context.Catalogues.Add(catalogue);
                         context.SaveChanges();
                     }
                 }
                 else
                 {
-                    throw new Exception("The product already exists.");
+                    throw new Exception("The catalogue already exists.");
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("Error adding new product: " + ex.Message);
+                throw new Exception("Error adding new catalogue: " + ex.Message);
             }
         }
 
-        public void Update(Product product)
+        public void Update(Catalogue catalogue)
         {
             try
             {
-                var existingProduct = GetProductByID(product.ProductId);
-                if (existingProduct != null)
+                var existingCatalogue = GetCatalogueById(catalogue.CatalogueId);
+                if (existingCatalogue != null)
                 {
                     using (var context = new ManageCoffeeContext())
                     {
-                        context.Products.Update(product);
+                        context.Catalogues.Update(catalogue);
                         context.SaveChanges();
                     }
                 }
                 else
                 {
-                    throw new Exception("The product does not exist.");
+                    throw new Exception("The catalogue does not exist.");
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("Error updating product: " + ex.Message);
+                throw new Exception("Error updating catalogue: " + ex.Message);
             }
         }
 
 
-        public void Remove(int productId)
+        public void Remove(int catalogueId)
         {
             try
             {
-                var productToRemove = GetProductByID(productId);
-                if (productToRemove != null)
+                var catalogueremove = GetCatalogueById(catalogueId);
+                if (catalogueremove != null)
                 {
                     using (var context = new ManageCoffeeContext())
                     {
-                        context.Products.Remove(productToRemove);
+                        context.Catalogues.Remove(catalogueremove);
                         context.SaveChanges();
                     }
                 }
                 else
                 {
-                    throw new Exception("The product does not exist.");
+                    throw new Exception("The catalogue does not exist.");
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("Error removing product: " + ex.Message);
+                throw new Exception("Error removing catalogue: " + ex.Message);
             }
         }
 
-        public void RemoveMultiple(List<int> productIds)
+        public void RemoveMultiple(List<int> catalogueIds)
         {
             try
             {
                 using (var context = new ManageCoffeeContext())
                 {
-                    foreach (var productId in productIds)
+                    foreach (var catalogueId in catalogueIds)
                     {
-                        var productToRemove = context.Users.FirstOrDefault(u => u.UserId == productId);
-                        if (productToRemove != null)
+                        var catalogueremove = context.Users.FirstOrDefault(u => u.UserId == catalogueId);
+                        if (catalogueremove != null)
                         {
-                            context.Users.Remove(productToRemove);
+                            context.Users.Remove(catalogueremove);
                         }
                     }
                     context.SaveChanges();
@@ -155,21 +154,20 @@ namespace ManageCoffee.DAO
             }
         }
 
-        public void DeleteDetailsByProductId(int productId)
+        public bool IsCatalogueExist(string cataloguename)
         {
             try
             {
                 using (var context = new ManageCoffeeContext())
                 {
-                    var detailsToDelete = context.Details.Where(d => d.ProductId == productId).ToList();
-                    context.Details.RemoveRange(detailsToDelete);
-                    context.SaveChanges();
+                    return context.Catalogues.Any(a => a.Name == cataloguename);
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("Error deleting details by product ID: " + ex.Message);
+                throw new Exception("Error checking for existing catalogue: " + ex.Message);
             }
         }
+
     }
 }
