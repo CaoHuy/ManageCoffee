@@ -100,7 +100,9 @@ namespace ManageCoffee.Models
 
                 entity.Property(e => e.ProductId).HasColumnName("product_id");
 
-                entity.Property(e => e.Quantity).HasColumnName("quantity");
+                entity.Property(e => e.Quantity)
+                    .HasColumnType("money")
+                    .HasColumnName("quantity");
 
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.Details)

@@ -51,7 +51,8 @@ namespace ManageCoffee.Controllers
                 order.TableId = int.Parse(request["table_id"]);
             }
             order.TotalPrice = int.Parse(request["total_price"]);
-            OrderDAO.Instance.AddNew(order);
+            dbContext.Orders.Add(order);
+            dbContext.SaveChanges();
             for (int i = 0; i < request["quantity[]"].Count(); i++)
             {
                 Detail detail = new Detail();
@@ -59,7 +60,8 @@ namespace ManageCoffee.Controllers
                 detail.ProductId = int.Parse(request["id[]"][i]);
                 detail.Quantity = int.Parse(request["quantity[]"][i]);
                 detail.Price = int.Parse(request["price[]"][i]);
-                DetailDAO.Instance.AddNew(detail);
+                dbContext.Add(detail);
+                dbContext.SaveChanges();
             }
             var table = dbContext.Tables.FirstOrDefault(t => t.TableId == order.TableId);
             if (table != null)
@@ -113,7 +115,7 @@ namespace ManageCoffee.Controllers
                     details = order.GetDetail(),
                     table = order.GetTable(),
                 });
-            }
+            } 
             else
             {
                 return BadRequest();

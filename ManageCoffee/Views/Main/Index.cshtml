@@ -168,7 +168,7 @@
                                 }
                                 str_table += `
                                 <li class="splide__slide pt-3">
-                                    <label for="table-${table.areaId}" class="cursor-pointer table-label">
+                                    <label for="table-${table.tableId}" class="cursor-pointer table-label">
                                         <div class="card table-card div-hover-effect shadow-sm p-3 text-center rounded-4 rounded-lg-5"
                                             style="width: 12rem;">
                                             <span class="text-overlay">${(table.area != null) ? table.area : 'Không có khu vực'}</span>
@@ -177,7 +177,7 @@
                                                 <small>${table_statusStr}</small>
                                             </div>
                                         </div>
-                                    <input type="radio" name="table" id="table-${table.areaId}" value="${table.areaId}" data-status="${table.status}" class="d-none table-select" />
+                                    <input type="radio" name="table" id="table-${table.tableId}" value="${table.tableId}" data-status="${table.status}" class="d-none table-select" />
                                     </label>
                                 </li>`;
                             } else if (valueToChange == table.status) {
@@ -189,7 +189,7 @@
                                 }
                                 str_table += `
                                     <li class="splide__slide pt-3">
-                                        <label for="table-${table.areaId}" class="cursor-pointer table-label">
+                                        <label for="table-${table.tableId}" class="cursor-pointer table-label">
                                             <div class="card table-card div-hover-effect shadow-sm p-3 text-center rounded-4 rounded-lg-5"
                                                 style="width: 12rem;">
                                                 <span class="text-overlay">${(table.area != null) ? table.area : 'Không có khu vực'}</span>
@@ -198,7 +198,7 @@
                                                     <small>${table_statusStr}</small>
                                                 </div>
                                             </div>
-                                        <input type="radio" name="table" id="table-${table.areaId}" value="${table.areaId}" data-status="${table.status}" class="d-none table-select" />
+                                        <input type="radio" name="table" id="table-${table.tableId}" value="${table.tableId}" data-status="${table.status}" class="d-none table-select" />
                                         </label>
                                     </li>`;
                             }

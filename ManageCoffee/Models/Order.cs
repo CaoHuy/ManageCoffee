@@ -27,6 +27,7 @@ namespace ManageCoffee.Models
         public virtual Table Table { get; set; }
         public virtual User User { get; set; }
         public virtual ICollection<Detail> Details { get; set; }
+
         public string getStatus()
         {
             return (this.Status == 0) ? "Chưa thanh toán" : "Đã thanh toán";
@@ -34,12 +35,12 @@ namespace ManageCoffee.Models
 
         public string getTableName()
         {
-            if (this.TableId != null)
-            {
-                TableDAO table = new TableDAO();
-                var name = table.GetTableByID(this.TableId).Name;
-                return name;
-            }
+            // if (this.TableId != null)
+            // {
+            //     TableDAO table = new TableDAO();
+            //     var name = table.GetTableByID(this.TableId).Name;
+            //     return name;
+            // }
             return "Mang đi";
         }
 
@@ -52,22 +53,22 @@ namespace ManageCoffee.Models
 
         public Table GetTable()
         {
-            if (this.TableId != null)
-            {
-                TableDAO dao = new TableDAO();
-                var table = dao.GetTableByID(this.TableId);
-                return table;
-            }
-            else
-            {
-                return null;
-            }
+            // if (this.TableId != null)
+            // {
+            //     TableDAO dao = new TableDAO();
+            //     var table = dao.GetTableByID(this.TableId);
+            //     return table;
+            // }
+            // else
+            // {
+            return null;
+            // }
         }
 
         public IEnumerable<Detail> GetDetail()
         {
             var context = new ManageCoffeeContext();
-            var details = context.Details.Where(d => d.OrderId == this.OrderId).ToList();
+            var details = context.Details.Where(detail => detail.OrderId == this.OrderId).ToList();
             return details;
         }
 
@@ -81,9 +82,9 @@ namespace ManageCoffee.Models
         public void RemoveDetails()
         {
             var context = new ManageCoffeeContext();
-            var details = context.Details.Where(d => d.OrderId == this.OrderId).Select(d => d.DetailId).ToList();
-            DetailDAO dao = new DetailDAO();
-            dao.RemoveMultiple(details);
+            var details = context.Details.Where(detail => detail.OrderId == this.OrderId).Select(detail => detail.DetailId).ToList();
+            // DetailDAO dao = new DetailDAO();
+            // dao.RemoveMultiple(details);
         }
     }
 }
