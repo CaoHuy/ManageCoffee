@@ -11,9 +11,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using ManageCoffee.Models.Authentication;
 
 namespace ManageCoffee.Controllers
-{
+{  
+    [Authentication]
     public class ProductController : Controller
     {
 

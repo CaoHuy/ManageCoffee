@@ -11,8 +11,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
+
 namespace ManageCoffee.Controllers
 {
+
     public class LoginController : Controller
     {
         public ActionResult Index()

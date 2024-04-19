@@ -10,10 +10,11 @@ using ManageCoffee.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
+using ManageCoffee.Models.Authentication;
 
 namespace ManageCoffee.Controllers
 {
-
+   [Authentication]
     public class TableController : Controller
     {
         public ActionResult Index()

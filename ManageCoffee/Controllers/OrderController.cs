@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ManageCoffee.Models;
 using ManageCoffee.DAO;
+using ManageCoffee.Models.Authentication;
 
 namespace ManageCoffee.Controllers
 {
+       [Authentication]
     public class OrderController : Controller
     {
         private ManageCoffeeContext dbContext = null;
