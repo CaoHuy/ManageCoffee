@@ -1,0 +1,93 @@
+@model ManageCoffee.Models.User
+@{
+    ViewData["Title"] = "Thông tin cá nhân";
+}
+
+<div class="container pt-4 px-3 pb-5">
+    <h1>Thông tin tài khoản</h1>
+    <hr>
+    <section class="section">
+        <div class="row gutters-sm">
+            <div class="col-md-4">
+                <img src="~/img/avatar_admin.png" alt="avatar" class="img-logo w-100 h-100 rounded-4"
+                    style="object-fit: cover">
+            </div>
+            <div class="col-md-8">
+                <div class="card mb-3 h-100">
+                    <div class="card-body">
+                        <form asp-controller="Profile" asp-action="ProfileUser" method="post">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Tên đầy đủ</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input type="text" asp-for="Name" class="form-control">
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Email</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input type="text" asp-for="Email" class="form-control">
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Điện thoại</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input type="text" asp-for="Phone" class="form-control">
+                                    <span asp-validation-for="Phone" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Vai trò</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input required type="hidden" asp-for="Role" class="form-control role-id">
+                                    <input type="text" id="role-name" class="form-control" disabled readonly>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-12 d-flex justify-content-end align-items-end">
+                                    <button type="submit" class="btn btn-primary">Xác nhận</button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        $(document).ready(function () {
+
+            $.get('/User/GetUserInfo', function (data) {
+                switch (data.role) {
+                    case 1:
+                        $('#role-name').val('Admin');
+                        break;
+                    case 2:
+                        $('#role-name').val('Chủ quán');
+                        break;
+                    default:
+                        $('#role-name').val('Nhân viên');
+                        break;
+                }
+            })
+        });
+    </script>
+}
