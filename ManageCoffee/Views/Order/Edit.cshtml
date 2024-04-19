@@ -1,5 +1,4 @@
 @model ManageCoffee.Models.Order
-@using Microsoft.AspNetCore.Http
 
 @{
     ViewData["Title"] = "Cập nhật đơn hàng";
@@ -25,7 +24,7 @@
                                 <div class="col-6 col-lg-4 d-flex align-items-center">
                                     <h5 class="text-primary my-0">Thu ngân</h5>
                                     <span class="text-dark fs-5 ms-2 my-0" id="cashier-name"></span>
-                                    <input type="hidden" asp-for="UserId" id="cashier-id">
+                                    <input type="hidden" name="UserId" id="cashier-id">
                                 </div>
                                 <div class="d-flex col-6 col-lg-5 px-0 mt-md-3 mt-lg-0">
                                     <div class="row w-100 algin-items-center">
@@ -33,7 +32,7 @@
                                             <h5 class="text-primary my-0 me-2">Chọn bàn</h5>
                                         </div>
                                         <div class="col-12 col-md-9">
-                                            <select id="order-table" asp-for="TableId" class="form-select">
+                                            <select id="order-table" name="TableId" class="form-select">
                                             </select>
                                         </div>
                                     </div>
@@ -59,7 +58,7 @@
                             <div class="col-12 col-lg-6 text-end me-lg-4 order-calc-fee d-none"></div>
                             <div class="col-12 col-lg-6 text-end me-lg-4 order-calc-discount"></div>
                             <div class="col-12 col-lg-6 text-end me-lg-4">
-                                <input type="hidden" asp-for="TotalPrice" class="bill-total">
+                                <input type="hidden" name="TotalPrice" class="bill-total">
                                 Tổng giá trị đơn hàng:<span class="order-summary ms-2"></span>
                             </div>
                         </div>
@@ -88,38 +87,37 @@
                 $('#cashier-name').text(data.user.name);
                 $(`[name=TableId]`).empty();
                 if (data.table != null) {
-                    $(`[name=TableId]`).append(`<option value="${data.table.id}" selected>${data.table.name}</option>`);
+                    $(`[name=TableId]`).append(`<option value="${data.table.tableId}" selected>${data.table.name}</option>`);
                 } else {
                     $(`[name=TableId]`).append(`<option selected disabled>Mang đi</option>`);
                 }
                 $.each(data.details, function (index, detail) {
                     var note = (detail.note) ? detail.note : "";
-                    var str = `<div class="row order-detail mb-2" data-index="${index}">
+                    var str = `<div class="row order-detail mb-2">
                                                     <div class="col-12 col-lg-4">
-                                                        <select name="details[${index}].ProductId" id="order-products-${index + 1}" class="form-control form-select rounded-2 order-product mb-1 mb-lg-0">
+                                                        <select name="product_id[]" id="order-products-${index + 1}" class="form-control form-select rounded-2 order-product mb-1 mb-lg-0">
                                                             <option value="" selected hidden disabled>Chọn món</option>`
                     $.each(data.products, function (key, product) {
-                        str += `<option value="${product.id}" data-price="${product.price}">${product.name}</option>`
+                        str += `<option value="${product.productId}" data-price="${product.price}">${product.name}</option>`
                     })
                     str += `</select>
                                         </div>
                                         <div class="col-4 col-lg-2">
-                                            <input type="hidden" name="details[${index}].OrderId" value="${id}"  class="detail-order-id">
-                                            <input type="text" id="order-prices-${index + 1}" value="${detail.price}" class="form-control border border-0 text-end order-price ps-0" inputmode="numeric"  autocomplete="off">
+                                            <span type="text" id="order-prices-${index + 1}" class="form-control border border-0 text-end order-price ps-0" inputmode="numeric"  autocomplete="off">${number_format(detail.price)}</span>
                                         </div>
                                         <div class="col-2 col-lg-2">
-                                            <input type="number" name="details[${index}].Quantity" id="order-quantities-${index + 1}"  value="${detail.quantity}" class="form-control border border-0 text-end order-quantity px-0" inputmode="numeric" autocomplete="off" placeholder="Số lượng">
+                                            <input type="number" name="quantity[]" id="order-quantities-${index + 1}"  value="${detail.quantity}" class="form-control border border-0 text-end order-quantity px-0" inputmode="numeric" autocomplete="off" placeholder="Số lượng">
                                         </div>
                                         <div class="col-3 col-lg-2 d-flex align-items-center justify-content-end">
                                             <div class="display-price"></div>
-                                            <input type="hidden" name="details[${index}].Price" id="order-price-${index + 1}" value="0" class="form-control border border-0 text-end order-price ps-0" autocomplete="off" readonly>
+                                            <input type="hidden" name="price[]" id="order-price-${index + 1}" value="0" class="form-control border border-0 text-end order-price ps-0" autocomplete="off" readonly>
                                         </div>
                                         <div class="col-3 col-lg-2 d-flex">
                                             <button type="button" class="btn btn-outline-secondary border border-0 btn-cancel rounded-2">&times;</button>
                                         </div>
                                     </div>
                                     <div class="d-flex align-items-center mb-5">
-                                        <input type="text" name="details[${index}].Note" value="${note}" class="form-control small order-note w-100" placeholder="Ghi chú">
+                                        <input type="text" name="note[]" value="${note}" class="form-control small order-note w-100" placeholder="Ghi chú">
                                                                                         </div>`
                     $('#order-form').find('#order-details').append(str).find(`#order-products-${index + 1}`).val(detail.productId)
                 })
@@ -127,7 +125,7 @@
                 $.get('/Table/GetTableFree', function (data) {
                     var str = ``
                     $.each(data, function (index, table) {
-                        str += `<option value="${table.id}">${table.name}</option>`
+                        str += `<option value="${table.tableId}">${table.name}</option>`
                     });
                     $(`[name=TableId]`).append(str);
                 })

@@ -24,7 +24,7 @@
                                 <div class="col-6 col-lg-4 d-flex align-items-center">
                                     <h5 class="text-primary my-0">Thu ngân</h5>
                                     <span class="text-dark fs-5 ms-2 my-0" id="cashier-name"></span>
-                                    <input type="text" name="UserId" id="cashier-id" value="1">
+                                    <input type="hidden" name="UserId" id="cashier-id">
                                 </div>
                                 <div class="d-flex col-6 col-lg-5 px-0 mt-md-3 mt-lg-0">
                                     <div class="row w-100 algin-items-center">
@@ -82,7 +82,7 @@
     <partial name="_ValidationScriptsPartial" />
     <script>
         $(document).ready(function () {
-        @* $.get('/User/GetUserInfo', function (data) {
+        $.get('/User/GetUserInfo', function (data) {
             var form = $('#order-form')
             form.find('#cashier-name').text(data.name)
             form.find('#cashier-id').val(data.id)
@@ -92,16 +92,16 @@
             $(`[name=TableId]`).empty();
             var str = `<option selected hidden disabled>Chọn bàn</option>`
             $.each(data, function (index, table) {
-            str += `<option value="${table.id}">${table.name}</option>`
+            str += `<option value="${table.tableId}">${table.name}</option>`
             });
             $(`[name=TableId]`).append(str);
-            }) *@
+            })
 
                 $(document).on('change', '.order-product', function () {
                     $(this).parents('#order-form').find('.btn-pay').addClass('d-none');
                     const detail = $(this).parents('.order-detail');
                     const value = $(this).find(':selected').attr('data-price')
-                    detail.find('.order-price').text(number_format(value));
+                    detail.find('span.order-price').text(number_format(value));
                     detail.find('.order-quantity').removeAttr('disabled').val(1);
                     detail.find('.btn-print').removeAttr('disabled');
                     calcBill();

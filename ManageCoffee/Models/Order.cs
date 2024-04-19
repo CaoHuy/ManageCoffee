@@ -81,7 +81,7 @@ namespace ManageCoffee.Models
         public void RemoveDetails()
         {
             var context = new ManageCoffeeContext();
-            var details = context.Details.Where(d => d.OrderId == this.OrderId).Select(d => d.OrderId).ToList();
+            var details = context.Details.Where(d => d.OrderId == this.OrderId).Select(d => d.DetailId).ToList();
             DetailDAO dao = new DetailDAO();
             dao.RemoveMultiple(details);
         }

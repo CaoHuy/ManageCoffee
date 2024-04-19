@@ -15,7 +15,7 @@ using ManageCoffee.Models.Authentication;
 
 namespace ManageCoffee.Controllers
 {
-    [Authentication]
+    // [Authentication]
     public class UserController : Controller
     {
         public ActionResult Index()
