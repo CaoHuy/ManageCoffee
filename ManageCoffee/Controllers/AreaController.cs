@@ -18,6 +18,7 @@ namespace ManageCoffee.Controllers
     {
         public ActionResult Index()
         {
+            ViewBag.IsActive = "area";
             return View();
         }
 
