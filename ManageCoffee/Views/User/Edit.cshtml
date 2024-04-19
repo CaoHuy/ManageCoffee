@@ -27,8 +27,9 @@
                         <div class="mb-3">
                             <label asp-for="Role" class="form-label fw-bold">Vai trò</label>
                             <select asp-for="Role" class="form-select user-role">
+                                <option value="1">Admin</option>
+                                <option value="2">Pha chế</option>
                                 <option value="3">Nhân viên</option>
-                                <option value="2">Chủ quán</option>
                             </select>
                             <span asp-validation-for="Role" class="text-danger"></span>
                         </div>
@@ -52,11 +53,11 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-        $.get('/User/GetUserInfo', function (data) {
+        @* $.get('/User/GetUserInfo', function (data) {
             if (data.role == 1) {
                 $('#user-form').find('.user-role').append('<option value="1">Admin</option>')
                 console.log($('#user-form').find('.user-role'))
             };
-        })
+        }) *@
     </script>
 }
