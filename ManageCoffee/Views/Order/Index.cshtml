@@ -154,7 +154,7 @@
     <script>
         $(document).ready(function () {
 
-        @* $.get('/User/GetUserInfo', function (data) {
+        $.get('/User/GetUserInfo', function (data) {
             switch (data.role) {
             case 1:
             $('.main-order-interface').empty();
@@ -163,7 +163,7 @@
             default:
             break;
             }
-            }) *@
+            })
 
                     const table = $('#data-table').DataTable({
                     processing: true,
@@ -247,8 +247,8 @@
                 }).then((result) => {
                     let totalPrice_img = 0;
                     if (!result.isConfirmed) {
-                        let modalEx = $('#setting-example'), str = `https://img.vietqr.io/image/`;
-                        $.get(`/Setting/Load`, function (settingList) {
+                        let modalEx = $('#config-example'), str = `https://img.vietqr.io/image/`;
+                        $.get(`/Config/Load`, function (settingList) {
                             $.each(settingList, function (index, setting) {
                                 if (setting.key == "bank_number") {
                                     str += setting.value + '-';
@@ -262,7 +262,7 @@
                                     str += setting.value;
                                 }
                             });
-                            console.log(str)
+                            @* console.log(str) *@
                             modalEx.find('img').attr('src', str);
                         });
                         modalEx.modal('show');

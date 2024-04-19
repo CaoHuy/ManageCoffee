@@ -10,7 +10,7 @@ using ManageCoffee.Models.Authentication;
 
 namespace ManageCoffee.Controllers
 {
-       [Authentication]
+    [Authentication]
     public class OrderController : Controller
     {
         private ManageCoffeeContext dbContext = null;
@@ -54,8 +54,8 @@ namespace ManageCoffee.Controllers
         public ActionResult Create(IFormCollection request)
         {
             Order order = new Order();
-            // User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
-            order.UserId = 1; // Fix lại thành user.UserId
+            User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
+            order.UserId = user.UserId;
             order.Status = 0;
             if (!string.IsNullOrEmpty(request["TableId"]))
             {
@@ -72,6 +72,7 @@ namespace ManageCoffee.Controllers
                 detail.ProductId = int.Parse(request["product_id[]"][i]);
                 detail.Quantity = int.Parse(request["quantity[]"][i]);
                 detail.Price = int.Parse(request["price[]"][i]);
+                detail.Note = request["note[]"][i];
                 DetailDAO.Instance.AddNew(detail);
             }
             var table = dbContext.Tables.FirstOrDefault(t => t.TableId == order.TableId);
@@ -128,52 +129,38 @@ namespace ManageCoffee.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(int id, Order order)
+        public ActionResult Edit(IFormCollection request)
         {
-            try
+            Order order = OrderDAO.Instance.GetOrderByID(int.Parse(request["orderId"]));
+            order.RemoveDetails();
+            var dbContext = new ManageCoffeeContext();
+            if (!string.IsNullOrEmpty(request["TableId"]))
             {
-                // Kiểm tra tính hợp lệ của dữ liệu đầu vào
-                if (!ModelState.IsValid)
+                if (int.Parse(request["TableId"]) != order.TableId)
                 {
-                    foreach (var modelState in ModelState.Values)
-                    {
-                        foreach (var error in modelState.Errors)
-                        {
-                            System.Console.WriteLine("Error: " + error.ErrorMessage);
-                        }
-                    }
-                    return View("Index", order);
+                    dbContext.Tables.FirstOrDefault(t => t.TableId == order.TableId).Status = 0;
+                    dbContext.Tables.FirstOrDefault(t => t.TableId == int.Parse(request["TableId"])).Status = 1;
+                    order.TableId = int.Parse(request["TableId"]);
                 }
-                Order ord = OrderDAO.Instance.GetOrderByID(id);
-                order.CreatedAt = ord.CreatedAt;
-                order.RemoveDetails();
-                var dbContext = new ManageCoffeeContext();
-                if (ord.TableId != order.TableId)
-                {
-                    dbContext.Tables.FirstOrDefault(t => t.TableId == ord.TableId).Status = 0;
-                    dbContext.Tables.FirstOrDefault(t => t.TableId == order.TableId).Status = 1;
-                }
-                User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
-                order.UserId = user.UserId;
-                OrderDAO.Instance.Update(order);
-                // LogDAO dao = new LogDAO();
-                // dao.AddNew(new Log
-                // {
-                //     Id = 0,
-                //     UserId = user.Id,
-                //     Action = "Đã cập nhật",
-                //     Object = "Sản phẩm",
-                //     ObjectId = order.Id,
-                // });
-                dbContext.SaveChanges();
-                return RedirectToAction(nameof(Index));
             }
-            catch (Exception ex)
+            User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
+            order.UserId = user.UserId;
+            order.TotalPrice = int.Parse(request["TotalPrice"]);
+            OrderDAO.Instance.Update(order);
+
+            //Tạo detail
+            for (int i = 0; i < request["quantity[]"].Count(); i++)
             {
-                // Xử lý lỗi và trả về phản hồi phù hợp
-                ViewBag.Message = ex.Message;
-                return View(order);
+                Detail detail = new Detail();
+                detail.OrderId = order.OrderId;
+                detail.ProductId = int.Parse(request["product_id[]"][i]);
+                detail.Quantity = int.Parse(request["quantity[]"][i]);
+                detail.Price = int.Parse(request["price[]"][i]);
+                detail.Note = request["note[]"][i];
+                DetailDAO.Instance.AddNew(detail);
             }
+            dbContext.SaveChanges();
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
