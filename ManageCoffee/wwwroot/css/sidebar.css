@@ -75,7 +75,7 @@
     font-size: 1rem;
     list-style: none;
     font-weight: 600;
-    color: hsl(24, 49%, 50%)
+    color: hsl(216, 98%, 52%)
 }
 
 .sidebar-wrapper .menu .sidebar-link {
@@ -87,12 +87,12 @@
     border-radius: .5rem;
     transition: all .5s;
     text-decoration: none;
-    color: hsl(24, 49%, 50%)
+    color: hsl(216, 98%, 52%)
 }
 
 .sidebar-wrapper .menu .sidebar-link i,
 .sidebar-wrapper .menu .sidebar-link svg {
-    color: hsl(22, 28%, 60%)
+    color: hsl(216, 98%, 52%)
 }
 
 .sidebar-wrapper .menu .sidebar-link span {
@@ -114,7 +114,7 @@
 }
 
 .sidebar-wrapper .menu .sidebar-item.main.active .sidebar-link {
-    background-color: hsl(24, 29%, 50%)
+    background-color: hsl(216, 98%, 52%)
 }
 
 .sidebar-wrapper .menu .sidebar-item.has-sub .sidebar-link:after {
@@ -127,7 +127,7 @@
 }
 
 .sidebar-wrapper .menu .sidebar-item.active .sidebar-link {
-    background-color: hsl(24, 29%, 50%)
+    background-color: hsl(216, 98%, 52%)
 }
 
 .sidebar-wrapper .menu .sidebar-item.active .sidebar-link span {
@@ -161,14 +161,14 @@
 }
 
 .sidebar-wrapper .menu .submenu .submenu-item.active>a {
-    color: hsl(24, 29%, 50%);
+    color: hsl(216, 98%, 52%);
     font-weight: 700
 }
 
 .sidebar-wrapper .menu .submenu .submenu-item a {
     padding: .7rem 2rem;
     display: block;
-    color: hsl(24, 49%, 50%);
+    color: hsl(216, 98%, 52%);
     font-size: .85rem;
     font-weight: 600;
     letter-spacing: .5px;
