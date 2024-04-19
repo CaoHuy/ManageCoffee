@@ -1,0 +1,163 @@
+@{
+    ViewData["Title"] = "Index";
+}
+<section class="row justify-content-center align-items-center">
+    <div class="col-9">
+        <div class="container card me-5 p-5 shadow-lg">
+            <h3 class="fw-bold">Cài đặt thanh toán</h3>
+            <hr>
+            <form asp-controller="Config" asp-action="BankUpdate" method="post" id="config-form" class="save-form"
+                accept-charset="UTF-8">
+                <div class="p-5">
+                    <div class="row justify-content-center">
+                        <div class="form-group col-12 col-lg-6">
+                            <label class="fw-bold" for="bank-id">Ngân hàng</label>
+                            <select disabled class="form-control" name="bank_id" id="bank-id">
+                                <option selected disabled hidden>Chọn ngân hàng</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-12 col-lg-6">
+                            <label class="fw-bold" for="bank-number">Số tài khoản</label>
+                            <input disabled type="text" class="form-control" id="bank-number" name="bank_number"
+                                placeholder="Nhập số tài khoản">
+                        </div>
+                        <div class="form-group col-12 col-lg-6">
+                            <label class="fw-bold" for="template">Mẩu QR</label>
+                            <select disabled class="form-control" name="bank_template">
+                                <option selected disabled hidden>Chọn mẩu QR</option>
+                                <option value="compact">Cơ bản</option>
+                                <option value="compact2">Số tài khoản - số tiền</option>
+                                <option value="qr_only">Chỉ mã QR</option>
+                                <option value="print">Mẩu in</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-12 col-lg-6">
+                            <label class="fw-bold" for="bank-content">Nội dung chuyển khoản</label>
+                            <input disabled type="text" class="form-control" id="bank-content" name="bank_content"
+                                placeholder="Nội dung chuyển khoản">
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end mt-4">
+                        <button type="button" class="btn btn-outline-success btn-config-example mx-3">Xem thử
+                            mẩu</button>
+                        <button type="button" class="btn btn-primary btn-config-update">Chỉnh sửa</button>
+                        <button type="submit" class="btn btn-success d-none btn-config-save">Xác nhận</button>
+                    </div>
+                </div>
+            </form>
+            @* Cài đặt cửa hàng *@
+            <h3 class="fw-bold">Cài đặt cửa hàng</h3>
+            <hr>
+            <form asp-controller="Config" asp-action="ShopUpdate" method="post" id="shop-config-form" class="save-form"
+                accept-charset="UTF-8">
+                <div class="p-5">
+                    <div class="row justify-content-center">
+                        <div class="form-group col-12">
+                            <label class="fw-bold" for="shop_name">Tên cửa hàng</label>
+                            <input disabled type="text" class="form-control" id="shop_name" name="shop_name"
+                                placeholder="Nhập tên cửa hàng">
+                        </div>
+                        <div class="form-group col-12">
+                            <label class="fw-bold" for="shop_address">Địa chỉ</label>
+                            <input disabled type="text" class="form-control" id="shop_address" name="shop_address"
+                                placeholder="Nhập địa chỉ">
+                        </div>
+                        <div class="form-group col-12 col-md-6">
+                            <label class="fw-bold" for="shop_phone">Số điện thoại</label>
+                            <input disabled type="text" class="form-control" id="shop_phone" name="shop_phone"
+                                placeholder="Nhập số điện thoại">
+                        </div>
+                        <div class="form-group col-12 col-md-6">
+                            <label class="fw-bold" for="shop_wifi">Mật khẩu wifi</label>
+                            <input disabled type="text" class="form-control" id="shop_wifi" name="shop_wifi"
+                                placeholder="Nhập mật khẩu wifi">
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end mt-4">
+                        <button type="button" class="btn btn-primary btn-shop-update">Chỉnh sửa</button>
+                        <button type="submit" class="btn btn-success d-none btn-shop-save">Xác nhận</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        $(document).ready(function () {
+            let form = $('#config-form');
+            $.get(`/Config/Load`, function (configList) {
+                $.each(configList, function (index, config) {
+                    if (config.key == "bank_number") {
+                        form.find('[name=bank_number]').val(config.value);
+                    } else if (config.key == "bank_id") {
+                        $.get('https://api.vietqr.io/v2/banks', function (api) {
+                            $.each(api.data, function (index, bank) {
+                                form.find('[name=bank_id]').append(`<option ${(bank.bin == config.value) ? 'selected' : ''} value="${bank.bin}">(${bank.bin}) ${bank.shortName} </option>`);
+                            });
+                        });
+                        form.find('[name=bank_id]').val(config.value);
+                    } else if (config.key == "bank_template") {
+                        form.find(`option[value="${config.value}"]`).prop('selected', true);
+                        form.find('[name=bank_template]');
+                    } else if (config.key == "bank_content") {
+                        form.find('[name=bank_content]').val(config.value);
+                    }
+                });
+            });
+
+            $(document).on('click', '.btn-config-update', function () {
+                $(this).addClass('d-none');
+                form.find('.btn-config-save').removeClass('d-none');
+                form.find('input, select').removeAttr('disabled');
+            })
+
+            $(document).on('click', '.btn-config-example', function () {
+                let modalEx = $('#config-example'), str = `https://img.vietqr.io/image/`;
+                $.get(`/Config/Load`, function (configList) {
+                    $.each(configList, function (index, config) {
+                        if (config.key == "bank_number") {
+                            str += config.value + '-';
+                        } if (config.key == "bank_id") {
+                            str += config.value + '-';
+                        }
+                        if (config.key == "bank_template") {
+                            str += config.value + '.png?amount=10000&addInfo=';
+                        }
+                        if (config.key == "bank_content") {
+                            str += config.value;
+                        }
+                    });
+                    modalEx.find('img').attr('src', str);
+                });
+                modalEx.modal('show');
+            })
+        });
+
+        $(document).ready(function () {
+            let shopForm = $('#shop-config-form');
+            // Load dữ liệu cho form cài đặt cửa hàng
+            $.get(`/Config/Load`, function (configList) {
+                $.each(configList, function (index, config) {
+                    if (config.key == "shop_name") {
+                        shopForm.find('[name=shop_name]').val(config.value);
+                    } else if (config.key == 'shop_phone') {
+                        shopForm.find('[name=shop_phone]').val(config.value);
+                    } else if (config.key == "shop_wifi") {
+                        shopForm.find('[name=shop_wifi]').val(config.value);
+                    } else if (config.key == "shop_address") {
+                        shopForm.find('[name=shop_address]').val(config.value);
+                    }
+                });
+            });
+
+            $(document).on('click', '.btn-shop-update', function () {
+                $(this).addClass('d-none');
+                shopForm.find('.btn-shop-save').removeClass('d-none');
+                shopForm.find('input, select').removeAttr('disabled');
+            })
+        });
+    </script>
+}
