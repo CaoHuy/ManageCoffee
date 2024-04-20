@@ -27,8 +27,10 @@
         <div class="row h-100">
             <div class="col-lg-5 col-12">
                 <div id="auth-left">
-                    <div class="auth-logo">
-                        <a href="index.html"><img src="~/img/favicon.jpg" alt="Logo"></a>
+                    <div class="d-flex justify-content-center logo w-100">
+                        <a href="index.html" class="logo-link">
+                            <img src="~/img/logo.jpg" alt="Logo" class="login-logo">
+                        </a>
                     </div>
                     <h1 class="auth-title">Đăng nhập.</h1>
                     <p class="auth-subtitle mb-5">Đăng nhập với tài khoản đã được cấp.</p>
@@ -83,5 +85,16 @@
     }
 
 </script>
+<style>
+    .logo-link {}
+
+    .login-logo {
+        max-width: 400px;
+        max-height: 400px;
+        background: linear-gradient(#1845ad, #23a2f6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+</style>
 
 </html>
