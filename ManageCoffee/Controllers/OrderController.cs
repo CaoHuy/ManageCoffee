@@ -81,15 +81,15 @@ namespace ManageCoffee.Controllers
                 table.Status = 1;
                 dbContext.SaveChanges();
             }
-            // LogDAO dao = new LogDAO();
-            // dao.AddNew(new Log
-            // {
-            //     Id = 0,
-            //     UserId = user.Id,
-            //     Action = "Đã tạo",
-            //     Object = "Đơn hàng",
-            //     ObjectId = order.Id,
-            // });
+            LogDAO dao = new LogDAO();
+            dao.AddNew(new Log
+            {
+                LogId = 0,
+                UserId = user.UserId,
+                Action = "Đã tạo",
+                Object = "Đơn hàng",
+                ObjectId = order.OrderId,
+            });
 
             return RedirectToAction(nameof(Index));
         }
@@ -159,6 +159,15 @@ namespace ManageCoffee.Controllers
                 detail.Note = request["note[]"][i];
                 DetailDAO.Instance.AddNew(detail);
             }
+            LogDAO dao = new LogDAO();
+            dao.AddNew(new Log
+            {
+                LogId = 0,
+                UserId = user.UserId,
+                Action = "Đã cập nhật",
+                Object = "Đơn hàng",
+                ObjectId = order.OrderId,
+            });
             dbContext.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
@@ -189,15 +198,15 @@ namespace ManageCoffee.Controllers
                     };
                     User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
                     var dbContext = new ManageCoffeeContext();
-                    // LogDAO dao = new LogDAO();
-                    // dao.AddNew(new Log
-                    // {
-                    //     Id = 0,
-                    //     UserId = user.Id,
-                    //     Action = "Đã xóa",
-                    //     Object = "Đơn hàng",
-                    //     ObjectId = id,
-                    // });
+                    LogDAO dao = new LogDAO();
+                    dao.AddNew(new Log
+                    {
+                        LogId = 0,
+                        UserId = user.UserId,
+                        Action = "Đã xóa",
+                        Object = "Đơn hàng",
+                        ObjectId = id,
+                    });
                     dbContext.SaveChanges();
                 }
                 return Json(response);

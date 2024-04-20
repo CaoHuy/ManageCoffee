@@ -84,7 +84,15 @@ namespace ManageCoffee.Controllers
                     UserDAO.Instance.AddNew(user);
                     var dbContext = new ManageCoffeeContext();
                     User auth = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
-
+                    LogDAO dao = new LogDAO();
+                    dao.AddNew(new Log
+                    {
+                        LogId = 0,
+                        UserId = user.UserId,
+                        Action = "Đã tạo",
+                        Object = "Tài khoản mới",
+                        ObjectId = user.UserId,
+                    });
                     dbContext.SaveChanges();
                     return RedirectToAction("Index");
                 }
@@ -155,6 +163,15 @@ namespace ManageCoffee.Controllers
                 UserDAO.Instance.Update(user);
                 User auth = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
                 var dbContext = new ManageCoffeeContext();
+                LogDAO dao = new LogDAO();
+                dao.AddNew(new Log
+                {
+                    LogId = 0,
+                    UserId = user.UserId,
+                    Action = "Đã cập nhật",
+                    Object = "tài khoản",
+                    ObjectId = user.UserId,
+                });
                 dbContext.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
@@ -189,8 +206,18 @@ namespace ManageCoffee.Controllers
                         title = "Đã xóa thành công.",
                         status = "success"
                     };
+                    User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
                     UserDAO.Instance.Remove(id);
                     var dbContext = new ManageCoffeeContext();
+                    LogDAO dao = new LogDAO();
+                    dao.AddNew(new Log
+                    {
+                        LogId = 0,
+                        UserId = user.UserId,
+                        Action = "Đã xóa",
+                        Object = "tài khoản",
+                        ObjectId = id,
+                    });
                     dbContext.SaveChanges();
                 }
                 return Json(response);

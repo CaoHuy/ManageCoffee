@@ -41,7 +41,7 @@ namespace ManageCoffee.Controllers
                 System.Console.WriteLine($"{field.Key}: {field.Value}");
             }
             Order order = new Order();
-            // User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
+            User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
             order.UserId = 1;
             order.Status = 0;
             order.Note = request["Note"];
@@ -79,7 +79,7 @@ namespace ManageCoffee.Controllers
         public object Edit(IFormCollection request)
         {
             Order order = OrderDAO.Instance.GetOrderByID(int.Parse(request["id"]));
-            // User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
+            User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
             System.Console.WriteLine(order.TableId);
             order.UserId = 1;
             order.TotalPrice = int.Parse(request["total_price"]);

@@ -69,8 +69,17 @@ namespace ManageCoffee.Controllers
                         return View(area);
                     }
                     AreaDAO.Instance.AddNew(area);
+                    User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
                     var dbContext = new ManageCoffeeContext();
-
+                    LogDAO dao = new LogDAO();
+                    dao.AddNew(new Log
+                    {
+                        LogId = 0,
+                        UserId = user.UserId,
+                        Action = "Đã tạo",
+                        Object = "Khu vực",
+                        ObjectId = area.AreaId,
+                    });
                     dbContext.SaveChanges();
                     return RedirectToAction("Index");
                 }
@@ -112,8 +121,18 @@ namespace ManageCoffee.Controllers
                     ModelState.AddModelError("Name", "Khu vực này đã tồn tại");
                     return View(area);
                 }
+                User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
                 AreaDAO.Instance.Update(area);
                 var dbContext = new ManageCoffeeContext();
+                LogDAO dao = new LogDAO();
+                dao.AddNew(new Log
+                {
+                    LogId = 0,
+                    UserId = user.UserId,
+                    Action = "Đã cập nhật",
+                    Object = "Khu vực",
+                    ObjectId = area.AreaId,
+                });
                 dbContext.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
@@ -148,8 +167,18 @@ namespace ManageCoffee.Controllers
                         title = "Đã xóa thành công.",
                         status = "success"
                     };
+                    User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
                     AreaDAO.Instance.Remove(id);
                     var dbContext = new ManageCoffeeContext();
+                    LogDAO dao = new LogDAO();
+                    dao.AddNew(new Log
+                    {
+                        LogId = 0,
+                        UserId = user.UserId,
+                        Action = "Đã tạo",
+                        Object = "Khu vực",
+                        ObjectId = id,
+                    });
                     dbContext.SaveChanges();
                 }
                 return Json(response);
