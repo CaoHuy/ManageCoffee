@@ -14,7 +14,7 @@ namespace ManageCoffee.Controllers
         LogDAO dao = new LogDAO();
 
         public ActionResult Index()
-        {
+        { 
             ViewBag.IsActive = "log";
             return View();
         }
