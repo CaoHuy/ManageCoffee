@@ -154,84 +154,84 @@
     <script>
         $(document).ready(function () {
 
-        $.get('/User/GetUserInfo', function (data) {
-            switch (data.role) {
-            case 1:
-            $('.main-order-interface').empty();
-            $('.extra-interface').removeClass('d-none');
-            break;
-            default:
-            break;
-            }
+            $.get('/User/GetUserInfo', function (data) {
+                switch (data.role) {
+                    case 2:
+                        $('.main-order-interface').empty();
+                        $('.extra-interface').removeClass('d-none');
+                        break;
+                    default:
+                        break;
+                }
             })
 
-                    const table = $('#data-table').DataTable({
-                    processing: true,
-                    serverSide: false,
-                    "order": [[0, "desc"]],
-                    ajax: {
-                        url: `/Order/Load`,
-                        error: function (err) {
-                            if (err.status == 401 || err.status == 419) {
-                                console.warn(err.responseJSON.errors);
-                                window.location.href = "/Login/Index";
-                            } else {
-                                console.log('Error:', err);
-                                swal(`{{ __("ĐÃ CÓ LỖI XẢY RA!") }}`, err.responseJSON.$message, 'error');
-                            }
-                        },
+            const table = $('#data-table').DataTable({
+                processing: true,
+                serverSide: false,
+                "order": [[0, "desc"]],
+                ajax: {
+                    url: `/Order/Load`,
+                    error: function (err) {
+                        if (err.status == 401 || err.status == 419) {
+                            console.warn(err.responseJSON.errors);
+                            window.location.href = "/Login/Index";
+                        } else {
+                            console.log('Error:', err);
+                            swal(`{{ __("ĐÃ CÓ LỖI XẢY RA!") }}`, err.responseJSON.$message, 'error');
+                        }
                     },
-                    columns: [
-                        {
-                            data: 'id',
-                            name: 'id'
-                        }, {
-                            data: 'table_id',
-                            name: 'table_id'
-                        }, {
-                            data: 'user_id',
-                            name: 'user_id'
-                        }, {
-                            data: 'total_price',
-                            name: 'total_price'
-                        }, {
-                            data: 'note',
-                            name: 'note'
-                        }, {
-                            data: 'created_at',
-                            name: 'created_at'
-                        }, {
-                            data: 'status',
-                            name: 'status'
-                        }, {
-                            data: 'action',
-                            name: 'action'
-                        },],
-                    language: {
-                        "sProcessing": "Đang xử lý...",
-                        "sLengthMenu": "_MENU_   dòng / trang",
-                        "sZeroRecords": "Nội dung trong.",
-                        "sInfo": "Từ _START_ đến _END_ của _TOTAL_ mục",
-                        "sInfoEmpty": "Không có mục nào",
-                        "sInfoFiltered": "(được lọc từ _MAX_ mục)",
-                        'searchPlaceholder': "Tìm kiếm dữ liệu",
-                        "sInfoPostFix": "",
-                        "sSearch": "",
-                        "sUrl": "",
-                        "oPaginate": {
-                            "sFirst": "&laquo;",
-                            "sPrevious": "&lsaquo;",
-                            "sNext": "&rsaquo;",
-                            "sLast": "&raquo;",
-                        },
+                },
+                columns: [
+                    {
+                        data: 'id',
+                        name: 'id'
+                    }, {
+                        data: 'table_id',
+                        name: 'table_id'
+                    }, {
+                        data: 'user_id',
+                        name: 'user_id'
+                    }, {
+                        data: 'total_price',
+                        name: 'total_price'
+                    }, {
+                        data: 'note',
+                        name: 'note'
+                    }, {
+                        data: 'created_at',
+                        name: 'created_at'
+                    }, {
+                        data: 'status',
+                        name: 'status'
+                    }, {
+                        data: 'action',
+                        name: 'action'
+                    },],
+                language: {
+                    "sProcessing": "Đang xử lý...",
+                    "sLengthMenu": "_MENU_   dòng / trang",
+                    "sZeroRecords": "Nội dung trong.",
+                    "sInfo": "Từ _START_ đến _END_ của _TOTAL_ mục",
+                    "sInfoEmpty": "Không có mục nào",
+                    "sInfoFiltered": "(được lọc từ _MAX_ mục)",
+                    'searchPlaceholder': "Tìm kiếm dữ liệu",
+                    "sInfoPostFix": "",
+                    "sSearch": "",
+                    "sUrl": "",
+                    "oPaginate": {
+                        "sFirst": "&laquo;",
+                        "sPrevious": "&lsaquo;",
+                        "sNext": "&rsaquo;",
+                        "sLast": "&raquo;",
                     },
-                    columnDefs: [{
-                        target: 7,
-                        sortable: false,
-                        searchable: false,
-                    }],
-                    lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Tất cả"]]
-                })
+                },
+                columnDefs: [{
+                    target: 7,
+                    sortable: false,
+                    searchable: false,
+                }],
+                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Tất cả"]]
+            })
 
             $(document).on('click', '.btn-pay', function () {
                 const id = parseInt($(this).attr('data-id'));
@@ -262,8 +262,8 @@
                                     str += setting.value;
                                 }
                             });
-                            @* console.log(str) *@
-                            modalEx.find('img').attr('src', str);
+        @* console.log(str) *@
+                                modalEx.find('img').attr('src', str);
                         });
                         modalEx.modal('show');
                         modalEx.on('hidden.bs.modal', function (e) {

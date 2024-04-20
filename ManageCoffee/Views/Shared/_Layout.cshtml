@@ -32,7 +32,7 @@
                     <div class="sidebar-header">
                         <div class="d-flex justify-content-between">
                             <div class="d-flex justify-content-center logo w-100">
-                                <a asp-controller="Home" asp-action="Index">
+                                <a asp-controller="Dashboard" asp-action="Index">
                                     <img src="~/img/logo.jpg" alt="logo" srcset="" class="img-logo">
                                 </a>
                             </div>
@@ -95,7 +95,7 @@
                                             <span>Sản phẩm</span>
                                         </a>
                                     </li>
-                                    <li class="submenu-item @(ViewBag.IsActive == "Catalogue" ? "active" : "")">
+                                    <li class="submenu-item @(ViewBag.IsActive == "catalogue" ? "active" : "")">
                                         <a class="text-decoration-none" asp-controller="Catalogue"
                                             asp-action="Index">Danh mục</a>
                                     </li>

@@ -16,6 +16,7 @@ namespace ManageCoffee.Controllers
     {
         public ActionResult Index()
         {
+             ViewBag.IsActive = "catalogue";
             return View();
         }
 
