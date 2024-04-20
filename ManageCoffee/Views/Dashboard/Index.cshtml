@@ -202,18 +202,18 @@
     <script>
         $(document).ready(function () {
 
-            @* $.get('/User/GetUserInfo', function (data) {
-                switch (data.role) {
-                    case 2:
-                        break;
-                    default:
-                        $('.main-dashboard').empty();
-                        $('.extra-interface').removeClass('d-none');
-                        break;
-                }
+        @* $.get('/User/GetUserInfo', function (data) {
+            switch (data.role) {
+            case 2:
+            break;
+            default:
+            $('.main-dashboard').empty();
+            $('.extra-interface').removeClass('d-none');
+            break;
+            }
             }) *@
 
-            var now = new Date();
+                var now = new Date();
             var endDate = moment(now.getTime() + 24 * 60 * 60 * 1000).format('DD/MM/YYYY');
             var startDate = moment(now.getTime() - 7 * 24 * 60 * 60 * 1000).format('DD/MM/YYYY');
             $('input[name="dateRange"]').daterangepicker({
@@ -240,6 +240,7 @@
                     numProduct = data.numberProducts;
                     $.each(data.dailiRevenues, function (i, order) {
                         ++numOrder;
+                        ++numProduct;
                         sumRevenue += order.totalPrice;
                         if (revenueMap.hasOwnProperty(moment(order.createdAt).format('DD-MM-YYYY'))) {
                             revenueMap[moment(order.createdAt).format('DD-MM-YYYY')] += order.totalPrice;
