@@ -141,6 +141,7 @@ namespace ManageCoffee.DAO
                         var DetailToRemove = context.Details.FirstOrDefault(d => d.DetailId == Id);
                         if (DetailToRemove != null)
                         {
+                            System.Console.WriteLine(DetailToRemove.Quantity+ " số lượng detak=il xoa");
                             context.Details.Remove(DetailToRemove);
                         }
                     }

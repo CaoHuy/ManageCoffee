@@ -51,7 +51,7 @@ namespace ManageCoffee.Controllers
             }
             order.TotalPrice = int.Parse(request["total_price"]);
             dbContext.Orders.Add(order);
-            dbContext.SaveChanges();
+            dbContext.SaveChanges();    
             for (int i = 0; i < request["quantity[]"].Count(); i++)
             {
                 Detail detail = new Detail();
@@ -78,14 +78,16 @@ namespace ManageCoffee.Controllers
         [HttpPost]
         public object Edit(IFormCollection request)
         {
-            System.Console.WriteLine(int.Parse(request["id"]));
             Order order = OrderDAO.Instance.GetOrderByID(int.Parse(request["id"]));
             // User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
+            System.Console.WriteLine(order.TableId);
             order.UserId = 1;
             order.TotalPrice = int.Parse(request["total_price"]);
-            OrderDAO.Instance.Update(order);
+            dbContext.Orders.Update(order);
+            dbContext.SaveChanges();
             order.RemoveDetails();
             //Tạo detail
+            System.Console.WriteLine(request["quantity[]"]+ " danh sách số lg");
             for (int i = 0; i < request["quantity[]"].Count(); i++)
             {
                 Detail detail = new Detail();
@@ -93,6 +95,7 @@ namespace ManageCoffee.Controllers
                 detail.ProductId = int.Parse(request["id[]"][i]);
                 detail.Quantity = int.Parse(request["quantity[]"][i]);
                 detail.Price = int.Parse(request["price[]"][i]);
+                System.Console.WriteLine("Đây là product ID: "+int.Parse(request["id[]"][i]));
                 DetailDAO.Instance.AddNew(detail);
             }
 

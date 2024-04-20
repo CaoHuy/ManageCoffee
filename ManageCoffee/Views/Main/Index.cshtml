@@ -98,7 +98,7 @@
                         </div>
                     </div>
                     <hr class="px-4">
-                    <form asp-controller="Main" asp-action="Create" method="post" id="main-form" class="save-form"
+                    <form action="/Main/Create" method="post" id="main-form" class="save-form"
                         accept-charset="UTF-8">
                         <ul class="bill-details">
                         </ul>
@@ -155,7 +155,6 @@
                 loadProduct('all');
 
                 function loadTable(valueToChange) {
-                    console.log(valueToChange);
                     let str_table = '';
                     $.get('/Main/Load', function (data) {
                         $.each(data.tables, function (index, table) {
@@ -351,7 +350,7 @@
                     if ($('.bill-details').find('*').length > 0) {
                         $.ajax({
                             type: $('#main-form').attr('method'),
-                            url: 'https://localhost:5001/Main/Create',
+                            url:  $('#main-form').attr('action'),
                             data: $('#main-form').serialize(),
                             dataType: 'json',
                             success: function (response) {
@@ -388,7 +387,7 @@
                     $('.number-details').text(0).removeClass('d-none');
                     const form = $('#main-form')
                     form.find('[name=id]').val(null)
-                    form.attr('action', 'Create')
+                    form.attr('action', '/Main/Create')
                     if (!$(this).hasClass('table-selected')) {
                         $('.bill-details').empty();
                         $('.bill-total').text(0);
@@ -404,20 +403,21 @@
                     $('.table-name').addClass('d-none');
                     $('#bill-canvas').offcanvas('show');
                     $.get(`/Main/GetOrderByTableId/?id=${id}`, function (data) {
-                        console.log(data)
                         $('.table-name').text(data.table.name).removeClass('d-none').addClass('border border-2');
-                        $('.btn-print').attr('data-id', data.order.id)
-                        form.find('.btn-pay').attr('data-id', data.order.id).removeClass('d-none');
-                        form.find('[name=id]').val(data.order.id)
+                        $('.btn-print').attr('data-id', data.order.orderId)
+                        form.find('.btn-pay').attr('data-id', data.order.orderId).removeClass('d-none');
+                        form.find('[name=id]').val(data.order.orderId)
                         form.find('.bill-total').text(number_format(data.order.totalPrice));
                         form.find('.input-bill-total').val(data.order.totalPrice);
-                        if (data.order.id != null) {
-                            form.attr('action', 'Edit')
+                        console.log(data)
+                        if (data.order.orderId != null) {
+                            form.attr('action', '/Main/Edit')
                         }
                         $('.bill-details').empty();
                         $.each(data.details, function (index, detail) {
                             $.get('/Product/getProduct/?id=' + detail.productId, function (response) {
-                                const str = `<div class="text-dark d-flex flex-column align-items-between w-100 ms-1 mt-2 bill-detail" data-id=${response.product.productId}>
+                                console.log(response)
+                                const str = `<div class="text-dark d-flex flex-column align-items-between w-100 ms-1 mt-2 bill-detail" data-id=${response.productId}>
                                     <div class="text-start px-1 fw-bold">${response.product.name}</div>
                                     <div class="row">
                                         <div class="col-4 text-end pe-5 d-flex align-items-center"><span class="me-2 d-flex align-items-center">${number_format(response.product.price)}</span></div>
@@ -474,6 +474,7 @@
                     const id = parseInt($(this).attr('data-id'));
                     $('#main-form').find('.btn-pay').addClass('d-none');
                     $.get('/Product/GetProduct/?id=' + id, function (response) {
+                        console.log(response.product)
                         const str = `<div class="text-dark d-flex flex-column align-items-between w-100 ms-1 mt-2 bill-detail" data-id=${response.product.productId}>
                                 <div class="text-start px-1 fw-bold">${response.product.name}</div>
                                 <div class="row">
