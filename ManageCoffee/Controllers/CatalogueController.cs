@@ -8,6 +8,8 @@ using ManageCoffee.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ManageCoffee.Models.Authentication;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
 
 namespace ManageCoffee.Controllers
 {
@@ -65,8 +67,17 @@ namespace ManageCoffee.Controllers
                         return View(catalogue);
                     }
                     CatalogueDAO.Instance.AddNew(catalogue);
+                    User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
                     var dbContext = new ManageCoffeeContext();
-
+                    LogDAO dao = new LogDAO();
+                    dao.AddNew(new Log
+                    {
+                        LogId = 0,
+                        UserId = user.UserId,
+                        Action = "Đã tạo",
+                        Object = "danh mục",
+                        ObjectId = catalogue.CatalogueId,
+                    });
                     dbContext.SaveChanges();
                     return RedirectToAction("Index");
                 }
@@ -107,8 +118,18 @@ namespace ManageCoffee.Controllers
                     ModelState.AddModelError("Name", "Danh mục này đã tồn tại");
                     return View(catalogue);
                 }
+                User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
                 CatalogueDAO.Instance.Update(catalogue);
                 var dbContext = new ManageCoffeeContext();
+                LogDAO dao = new LogDAO();
+                dao.AddNew(new Log
+                {
+                    LogId = 0,
+                    UserId = user.UserId,
+                    Action = "Đã cập nhật",
+                    Object = "Danh mục",
+                    ObjectId = catalogue.CatalogueId,
+                });
                 dbContext.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
@@ -143,8 +164,18 @@ namespace ManageCoffee.Controllers
                         title = "Đã xóa thành công.",
                         status = "success"
                     };
+                    User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
                     CatalogueDAO.Instance.Remove(id);
                     var dbContext = new ManageCoffeeContext();
+                    LogDAO dao = new LogDAO();
+                    dao.AddNew(new Log
+                    {
+                        LogId = 0,
+                        UserId = user.UserId,
+                        Action = "Đã xóa",
+                        Object = "Danh mục",
+                        ObjectId = id,
+                    });
                     dbContext.SaveChanges();
                 }
                 return Json(response);

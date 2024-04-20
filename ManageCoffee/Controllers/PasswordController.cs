@@ -57,8 +57,8 @@ namespace ManageCoffee.Controllers
 
                 string otp = GenerateOTP();
 
-                string fromAddress = "phamcongto1512@gmail.com";
-                string fromPassword = "palmvlgqurncodis";
+                string fromAddress = "lochvtce170122@fpt.edu.vn";
+                string fromPassword = "zhpnjgvwryfhfapr";
 
                 string toAddress = email;
                 string subject = "OTP CODE";

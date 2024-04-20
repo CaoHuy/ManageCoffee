@@ -14,7 +14,7 @@ using Newtonsoft.Json;
 using ManageCoffee.Models.Authentication;
 
 namespace ManageCoffee.Controllers
-{  
+{
     [Authentication]
     public class ProductController : Controller
     {
@@ -110,16 +110,15 @@ namespace ManageCoffee.Controllers
                     ProductDAO.Instance.AddNew(product);
                     User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
                     var dbContext = new ManageCoffeeContext();
-
-                    // LogDAO dao = new LogDAO();
-                    // dao.AddNew(new Log
-                    // {
-                    //     Id = 0,
-                    //     UserId = user.Id,
-                    //     Action = "Đã tạo",
-                    //     Object = "Sản phẩm",
-                    //     ObjectId = product.Id,
-                    // });
+                    LogDAO dao = new LogDAO();
+                    dao.AddNew(new Log
+                    {
+                        LogId = 0,
+                        UserId = user.UserId,
+                        Action = "Đã tạo",
+                        Object = "Sản phẩm",
+                        ObjectId = product.ProductId,
+                    });
                     dbContext.SaveChanges();
                 }
                 return RedirectToAction("Index");
@@ -131,7 +130,7 @@ namespace ManageCoffee.Controllers
                 return View(product);
             }
         }
-        
+
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -187,10 +186,20 @@ namespace ManageCoffee.Controllers
                         }
 
                         // Cập nhật thông tin sản phẩm
+                        User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
                         product.ProductId = id; // Đảm bảo rằng Id của sản phẩm không thay đổi
                         ProductDAO.Instance.Update(product);
+                        var dbContext = new ManageCoffeeContext(); 
+                        LogDAO dao = new LogDAO();
+                        dao.AddNew(new Log
+                        {
+                            LogId = 0,
+                            UserId = user.UserId,
+                            Action = "Đã cập nhật",
+                            Object = "Sản phẩm",
+                            ObjectId = product.ProductId,
+                        });
 
-                        var dbContext = new ManageCoffeeContext();
                         dbContext.SaveChanges();
 
                         return RedirectToAction(nameof(Index));
@@ -247,15 +256,15 @@ namespace ManageCoffee.Controllers
                         status = "success"
                     };
                     var dbContext = new ManageCoffeeContext();
-                    // LogDAO dao = new LogDAO();
-                    // dao.AddNew(new Log
-                    // {
-                    //     Id = 0,
-                    //     UserId = user.Id,
-                    //     Action = "Đã xóa",
-                    //     Object = "Sản phẩm",
-                    //     ObjectId = id,
-                    // });
+                    LogDAO dao = new LogDAO();
+                    dao.AddNew(new Log
+                    {
+                        LogId = 0,
+                        UserId = user.UserId,
+                        Action = "Đã xóa",
+                        Object = "Sản phẩm",
+                        ObjectId = id,
+                    });
                     dbContext.SaveChanges();
                 }
                 return Json(response);

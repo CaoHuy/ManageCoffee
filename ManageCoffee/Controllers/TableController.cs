@@ -14,7 +14,7 @@ using ManageCoffee.Models.Authentication;
 
 namespace ManageCoffee.Controllers
 {
-   [Authentication]
+    [Authentication]
     public class TableController : Controller
     {
         public ActionResult Index()
@@ -66,6 +66,15 @@ namespace ManageCoffee.Controllers
                 TableDAO.Instance.AddNew(table);
                 User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
                 var dbContext = new ManageCoffeeContext();
+                LogDAO dao = new LogDAO();
+                dao.AddNew(new Log
+                {
+                    LogId = 0,
+                    UserId = user.UserId,
+                    Action = "Đã tạo",
+                    Object = "Bàn mới",
+                    ObjectId = table.TableId,
+                });
                 dbContext.SaveChanges();
                 ViewBag.IsActive = "table";
                 return RedirectToAction(nameof(Index));
@@ -136,10 +145,20 @@ namespace ManageCoffee.Controllers
                             }
                             else
                             {
+                                User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
                                 table.TableId = id;
                                 TableDAO.Instance.Update(table);
                                 // Lưu thay đổi vào cơ sở dữ liệu
                                 var dbContext = new ManageCoffeeContext();
+                                LogDAO dao = new LogDAO();
+                                dao.AddNew(new Log
+                                {
+                                    LogId = 0,
+                                    UserId = user.UserId,
+                                    Action = "Đã cập nhật",
+                                    Object = "Bàn",
+                                    ObjectId = table.TableId,
+                                });
                                 dbContext.SaveChanges();
                                 // Chuyển hướng đến trang danh sách bàn
                                 return RedirectToAction(nameof(Index));
@@ -193,15 +212,15 @@ namespace ManageCoffee.Controllers
                     TableDAO.Instance.Remove(id);
                     User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
                     var dbContext = new ManageCoffeeContext();
-                    // LogDAO dao = new LogDAO();
-                    // dao.AddNew(new Log
-                    // {
-                    //     Id = 0,
-                    //     UserId = user.Id,
-                    //     Action = "Đã xóa",
-                    //     Object = "Bàn",
-                    //     ObjectId = id,
-                    // });
+                    LogDAO dao = new LogDAO();
+                    dao.AddNew(new Log
+                    {
+                        LogId = 0,
+                        UserId = user.UserId,
+                        Action = "Đã xóa",
+                        Object = "Bàn",
+                        ObjectId = id,
+                    });
                     dbContext.SaveChanges();
                     response = new
                     {
