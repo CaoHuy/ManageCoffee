@@ -54,7 +54,7 @@ namespace ManageCoffee.Controllers
             });
         }
 
-        public ActionResult getProduct(int id)
+        public ActionResult GetProduct(int id)
         {
             var product = ProductDAO.Instance.GetProductByID(id);
             if (product == null)
@@ -110,6 +110,7 @@ namespace ManageCoffee.Controllers
                     ProductDAO.Instance.AddNew(product);
                     User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
                     var dbContext = new ManageCoffeeContext();
+
                     // LogDAO dao = new LogDAO();
                     // dao.AddNew(new Log
                     // {

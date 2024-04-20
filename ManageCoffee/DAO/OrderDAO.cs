@@ -186,7 +186,7 @@ namespace ManageCoffee.DAO
             {
                 if (ints.Contains(item.OrderId))
                 {
-                    numberProduct += item.Quantity;
+                    // numberProduct += item.Quantity;
                 }
             }
             return numberProduct;
