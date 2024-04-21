@@ -241,15 +241,15 @@ namespace ManageCoffee.Controllers
                     table.Status = 0;
                     dbContext.SaveChanges();
                 }
-                // LogDAO dao = new LogDAO();
-                // dao.AddNew(new Log
-                // {
-                //     Id = 0,
-                //     UserId = user.Id,
-                //     Action = "Đã thanh toán",
-                //     Object = "Đơn hàng",
-                //     ObjectId = order.Id,
-                // });
+                LogDAO dao = new LogDAO();
+                dao.AddNew(new Log
+                {
+                    LogId = 0,
+                    UserId = user.UserId,
+                    Action = "Đã thanh toán",
+                    Object = "Đơn hàng",
+                    ObjectId = order.OrderId,
+                });
 
                 return Ok();
             }
