@@ -6,44 +6,68 @@
 
 <section class="row justify-content-center align-items-center">
     <div class="col-12">
-        <div class="container card me-5 p-2 p-md-5 shadow-lg">
-            <h3 class="fw-bold">Thêm đơn hàng mới</h3>
+        <div class="container card me-5 p-lg-5 p-2 shadow-lg">
+
+            <div class="row text-center align-items-center justify-content-center">
+                <div class="col-1 z-3">
+                    <a asp-action="Index" class="btn btn-outline-primary border border-0"><i
+                            class="bi bi-arrow-left-circle h2"></i></a>
+                </div>
+                <div class="col-10">
+                    <h3 class="fw-bold">Thêm đơn hàng mới</h3>
+                </div>
+                <div class="col-1"></div>
+
+            </div>
             <hr>
             <form asp-controller="Order" asp-action="Create" method="post" id="order-form" class="save-form"
                 accept-charset="UTF-8">
-                <div class="py-4 px-3">
+                <div class="px-lg-5 px-2 py-2">
                     <div class="row">
                         <input type="hidden" name="OrderId">
                         <span asp-validation-for="OrderId" class="text-danger"></span>
                         <div class="mx-1 mx-lg-3 order-header">
-                            <div class="row justify-content-end align-items-center">
-                                <div class="col-6 col-lg-3 d-flex align-items-center">
-                                    <h5 class="text-primary my-0">Mã đơn</h5>
-                                    <span class="text-dark fs-5 ms-2 my-0 order-id"></span>
-                                </div>
-                                <div class="col-6 col-lg-4 d-flex align-items-center">
-                                    <h5 class="text-primary my-0">Thu ngân</h5>
-                                    <span class="text-dark fs-5 ms-2 my-0" id="cashier-name"></span>
-                                    <input type="hidden" name="UserId" id="cashier-id">
-                                </div>
-                                <div class="d-flex col-6 col-lg-5 px-0 mt-md-3 mt-lg-0">
-                                    <div class="row w-100 algin-items-center">
-                                        <div class="col-md-3 d-none d-md-block">
-                                            <h5 class="text-primary my-0 me-2">Chọn bàn</h5>
+                            <div class="row justify-content-between align-items-center">
+                                <!-- Mã đơn và Thu ngân -->
+                                <div class="col-12 col-lg-6 mb-3 mb-lg-0">
+                                    <div class="row align-items-center">
+                                        <div class="col-6 d-flex align-items-center">
+                                            <h5 class="text-primary my-0">Mã đơn</h5>
+                                            <input type="text" id="order-id" asp-for="OrderId"
+                                                class="form-control fs-5 border border-0 w-20" readonly>
                                         </div>
-                                        <div class="col-12 col-md-9">
-                                            <select id="order-table" name="TableId" class="form-select">
-                                            </select>
+                                        <div class="col-6 d-flex align-items-center">
+                                            <h5 class="text-primary my-0">Thu ngân</h5>
+                                            <span class="text-dark fs-5 ms-2 my-0" id="cashier-name"></span>
+                                            <input type="hidden" name="UserId" id="cashier-id">
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-6 d-flex justify-content-end align-items-center p-0 mt-3 mb-3 mb-md-0">
-                                    <button class="btn btn-outline-primary btn-add-product" type="button"
-                                        data-bs-toggle="tooltip" data-bs-title="Thêm món">
-                                        <i class="bi bi-plus"></i>
-                                    </button>
+
+                                <!-- Chọn bàn và nút thêm món -->
+                                <div class="col-12 col-lg-6">
+                                    <div class="row justify-content-between align-items-center">
+                                        <div class="col-10 col-lg-10 mb-3 mb-lg-0">
+                                            <div class="row align-items-center">
+                                                <div class="col-4">
+                                                    <h5 class="text-primary my-0 me-2">Chọn bàn</h5>
+                                                </div>
+                                                <div class="col-8">
+                                                    <select id="order-table" name="TableId" class="form-select">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-2 col-lg-2 d-flex justify-content-end align-items-center p-0 mb-3 mb-lg-0">
+                                            <button class="btn btn-outline-primary btn-add-product" type="button"
+                                                data-bs-toggle="tooltip" data-bs-title="Thêm món">
+                                                <i class="bi bi-plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+
                         </div>
                         <div class="row mt-4 d-none d-lg-flex">
                             <div class="col-4 fw-bold text-center">Tên món</div>
@@ -64,12 +88,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-6 d-flex justify-content-start">
-                        <a asp-action="Index" class="btn btn-outline-primary border border-0"><i
-                                class="bi bi-arrow-left-circle h2"></i></a>
-                    </div>
-                    <div class="col-6 d-flex justify-content-end align-items-center">
+                <div class="mt-3">
+                    <div class="col-12 d-flex justify-content-end align-items-center">
                         <button type="submit" class="btn btn-primary fw-bold py-2 px-4">Tạo</button>
                     </div>
                 </div>
@@ -82,30 +102,30 @@
     <partial name="_ValidationScriptsPartial" />
     <script>
         $(document).ready(function () {
-        $.get('/User/GetUserInfo', function (data) {
-            var form = $('#order-form')
-            form.find('#cashier-name').text(data.name)
-            form.find('#cashier-id').val(data.id)
+            $.get('/User/GetUserInfo', function (data) {
+                var form = $('#order-form')
+                form.find('#cashier-name').text(data.name)
+                form.find('#cashier-id').val(data.id)
             })
 
             $.get('/Table/GetTableFree', function (data) {
-            $(`[name=TableId]`).empty();
-            var str = `<option selected hidden disabled>Chọn bàn</option>`
-            $.each(data, function (index, table) {
-            str += `<option value="${table.tableId}">${table.name}</option>`
-            });
-            $(`[name=TableId]`).append(str);
+                $(`[name=TableId]`).empty();
+                var str = `<option selected hidden disabled>Chọn bàn</option>`
+                $.each(data, function (index, table) {
+                    str += `<option value="${table.tableId}">${table.name}</option>`
+                });
+                $(`[name=TableId]`).append(str);
             })
 
-                $(document).on('change', '.order-product', function () {
-                    $(this).parents('#order-form').find('.btn-pay').addClass('d-none');
-                    const detail = $(this).parents('.order-detail');
-                    const value = $(this).find(':selected').attr('data-price')
-                    detail.find('span.order-price').text(number_format(value));
-                    detail.find('.order-quantity').removeAttr('disabled').val(1);
-                    detail.find('.btn-print').removeAttr('disabled');
-                    calcBill();
-                });
+            $(document).on('change', '.order-product', function () {
+                $(this).parents('#order-form').find('.btn-pay').addClass('d-none');
+                const detail = $(this).parents('.order-detail');
+                const value = $(this).find(':selected').attr('data-price')
+                detail.find('span.order-price').text(number_format(value));
+                detail.find('.order-quantity').removeAttr('disabled').val(1);
+                detail.find('.btn-print').removeAttr('disabled');
+                calcBill();
+            });
 
             $(document).on('change keyup', '.order-quantity', function () {
                 $(this).parents('#order-form').find('.btn-pay').addClass('d-none');

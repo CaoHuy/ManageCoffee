@@ -5,13 +5,24 @@
 }
 
 <section class="row justify-content-center align-items-center">
-    <div class="col-9">
-        <div class="container card me-5 p-5 shadow-lg">
-            <h3 class="fw-bold">Cập nhật sản phẩm</h3>
+    <div class="col-lg-9 col-12">
+        <div class="container card me-5 p-lg-5 p-2 shadow-lg">
+
+            <div class="row text-center align-items-center justify-content-center">
+                <div class="col-1 z-3">
+                    <a asp-action="Index" class="btn btn-outline-primary border border-0"><i
+                            class="bi bi-arrow-left-circle h2"></i></a>
+                </div>
+                <div class="col-10">
+                    <h3 class="fw-bold">Cập nhật sản phẩm</h3>
+                </div>
+                <div class="col-1"></div>
+
+            </div>
             <hr>
             <form asp-controller="Product" asp-action="Edit" method="post" id="product-form" class="save-form"
                 accept-charset="UTF-8" enctype="multipart/form-data">
-                <div class="p-sm-3 p-5">
+                <div class="px-lg-5 px-2 py-2">
                     <div class="row">
                         <div class="col-12 col-lg-6">
                             <div class="card card-body mb-3 border border-primary select-image"
@@ -56,12 +67,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mt-3">
-                        <div class="col-6 d-flex justify-content-start">
-                            <a asp-action="Index" class="btn btn-outline-primary border border-0"><i
-                                    class="bi bi-arrow-left-circle h2"></i></a>
-                        </div>
-                        <div class="col-6 d-flex justify-content-end align-items-center">
+                   <div class="mt-3">
+                            <div class="col-12 d-flex justify-content-end align-items-center">
                             <button type="submit" class="btn btn-primary fw-bold py-2">Xác nhận</button>
                         </div>
                     </div>

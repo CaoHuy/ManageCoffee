@@ -6,44 +6,67 @@
 
 <section class="row justify-content-center align-items-center">
     <div class="col-12">
-        <div class="container card me-5 p-2 p-md-5 shadow-lg">
-            <h3 class="fw-bold">Cập nhật đơn hàng</h3>
+        <div class="container card me-5 p-lg-5 p-2 shadow-lg">
+
+            <div class="row text-center align-items-center justify-content-center">
+                <div class="col-1 z-3">
+                    <a asp-action="Index" class="btn btn-outline-primary border border-0"><i
+                            class="bi bi-arrow-left-circle h2"></i></a>
+                </div>
+                <div class="col-10">
+                    <h3 class="fw-bold">Cập nhật đơn hàng</h3>
+                </div>
+                <div class="col-1"></div>
+
+            </div>
             <hr>
             <form asp-controller="Order" asp-action="Edit" method="post" id="order-form" class="save-form"
                 accept-charset="UTF-8">
-                <div class="py-4 px-3">
+                <div class="px-lg-5 px-2 py-2">
                     <div class="row">
                         <span asp-validation-for="OrderId" class="text-danger"></span>
                         <div class="mx-1 mx-lg-3 order-header">
-                            <div class="row justify-content-end align-items-center">
-                                <div class="col-6 col-lg-3 d-flex align-items-center">
-                                    <h5 class="text-primary my-0">Mã đơn</h5>
-                                    <input type="text" id="order-id" asp-for="OrderId"
-                                        class="form-control fs-5 border border-0 w-50" readonly>
-                                </div>
-                                <div class="col-6 col-lg-4 d-flex align-items-center">
-                                    <h5 class="text-primary my-0">Thu ngân</h5>
-                                    <span class="text-dark fs-5 ms-2 my-0" id="cashier-name"></span>
-                                    <input type="hidden" name="UserId" id="cashier-id">
-                                </div>
-                                <div class="d-flex col-6 col-lg-5 px-0 mt-md-3 mt-lg-0">
-                                    <div class="row w-100 algin-items-center">
-                                        <div class="col-md-3 d-none d-md-block">
-                                            <h5 class="text-primary my-0 me-2">Chọn bàn</h5>
+                            <div class="row justify-content-between align-items-center">
+                                <div class="col-12 col-lg-6 mb-3 mb-lg-0">
+                                    <div class="row">
+                                        <div class="col-6  d-flex align-items-center">
+                                            <h5 class="text-primary my-0">Mã đơn</h5>
+                                            <input type="text" id="order-id" asp-for="OrderId"
+                                                class="form-control fs-5 border border-0 w-20" readonly>
                                         </div>
-                                        <div class="col-12 col-md-9">
-                                            <select id="order-table" name="TableId" class="form-select">
-                                            </select>
+                                        <div class="col-6  d-flex align-items-center">
+                                            <h5 class="text-primary my-0">Thu ngân</h5>
+                                            <span class="text-dark fs-5 ms-2 my-0" id="cashier-name"></span>
+                                            <input type="hidden" name="UserId" id="cashier-id">
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-6 d-flex justify-content-end align-items-center p-0 mt-3 mb-3 mb-md-0">
-                                    <button class="btn btn-outline-primary btn-add-product" type="button"
-                                        data-bs-toggle="tooltip" data-bs-title="Thêm món">
-                                        <i class="bi bi-plus"></i>
-                                    </button>
+
+                                <div class="col-12 col-lg-6">
+                                    <div class="row justify-content-between align-items-center">
+                                        <div class="col-10 col-lg-10 mb-3 mb-lg-0">
+                                            <div class="row align-items-center justify-content-between">
+                                                <div class="col-4 mb-3 mb-lg-0">
+                                                    <h5 class="text-primary my-0 me-2">Chọn bàn</h5>
+                                                </div>
+                                                <div class="col-8 mb-3 mb-lg-0">
+                                                    <select id="order-table" name="TableId" class="form-select">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-2 col-lg-2 d-flex justify-content-end align-items-center p-0 mb-3 mb-lg-0">
+                                            <button class="btn btn-outline-primary btn-add-product" type="button"
+                                                data-bs-toggle="tooltip" data-bs-title="Thêm món">
+                                                <i class="bi bi-plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
+
                             </div>
+
                         </div>
                         <div class="row mt-4 d-none d-lg-flex">
                             <div class="col-4 fw-bold text-center">Tên món</div>
@@ -64,12 +87,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-6 d-flex justify-content-start">
-                        <a asp-action="Index" class="btn btn-outline-primary border border-0"><i
-                                class="bi bi-arrow-left-circle h2"></i></a>
-                    </div>
-                    <div class="col-6 d-flex justify-content-end align-items-center">
+                <div class="mt-3">
+                    <div class="col-12 d-flex justify-content-end align-items-center">
                         <button type="submit" class="btn btn-primary fw-bold py-2">Xác nhận</button>
                     </div>
                 </div>
@@ -94,31 +113,31 @@
                 $.each(data.details, function (index, detail) {
                     var note = (detail.note) ? detail.note : "";
                     var str = `<div class="row order-detail mb-2">
-                                                    <div class="col-12 col-lg-4">
-                                                        <select name="product_id[]" id="order-products-${index + 1}" class="form-control form-select rounded-2 order-product mb-1 mb-lg-0">
-                                                            <option value="" selected hidden disabled>Chọn món</option>`
+                                                                    <div class="col-12 col-lg-4">
+                                                                        <select name="product_id[]" id="order-products-${index + 1}" class="form-control form-select rounded-2 order-product mb-1 mb-lg-0">
+                                                                            <option value="" selected hidden disabled>Chọn món</option>`
                     $.each(data.products, function (key, product) {
                         str += `<option value="${product.productId}" data-price="${product.price}">${product.name}</option>`
                     })
                     str += `</select>
-                                        </div>
-                                        <div class="col-4 col-lg-2">
-                                            <span type="text" id="order-prices-${index + 1}" class="form-control border border-0 text-end order-price ps-0" inputmode="numeric"  autocomplete="off">${number_format(detail.price)}</span>
-                                        </div>
-                                        <div class="col-2 col-lg-2">
-                                            <input type="number" name="quantity[]" id="order-quantities-${index + 1}"  value="${detail.quantity}" class="form-control border border-0 text-end order-quantity px-0" inputmode="numeric" autocomplete="off" placeholder="Số lượng">
-                                        </div>
-                                        <div class="col-3 col-lg-2 d-flex align-items-center justify-content-end">
-                                            <div class="display-price"></div>
-                                            <input type="hidden" name="price[]" id="order-price-${index + 1}" value="0" class="form-control border border-0 text-end order-price ps-0" autocomplete="off" readonly>
-                                        </div>
-                                        <div class="col-3 col-lg-2 d-flex">
-                                            <button type="button" class="btn btn-outline-secondary border border-0 btn-cancel rounded-2">&times;</button>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-5">
-                                        <input type="text" name="note[]" value="${note}" class="form-control small order-note w-100" placeholder="Ghi chú">
-                                                                                        </div>`
+                                                        </div>
+                                                        <div class="col-4 col-lg-2">
+                                                            <span type="text" id="order-prices-${index + 1}" class="form-control border border-0 text-end order-price ps-0" inputmode="numeric"  autocomplete="off">${number_format(detail.price)}</span>
+                                                        </div>
+                                                        <div class="col-2 col-lg-2">
+                                                            <input type="number" name="quantity[]" id="order-quantities-${index + 1}"  value="${detail.quantity}" class="form-control border border-0 text-end order-quantity px-0" inputmode="numeric" autocomplete="off" placeholder="Số lượng">
+                                                        </div>
+                                                        <div class="col-3 col-lg-2 d-flex align-items-center justify-content-end">
+                                                            <div class="display-price"></div>
+                                                            <input type="hidden" name="price[]" id="order-price-${index + 1}" value="0" class="form-control border border-0 text-end order-price ps-0" autocomplete="off" readonly>
+                                                        </div>
+                                                        <div class="col-3 col-lg-2 d-flex">
+                                                            <button type="button" class="btn btn-outline-secondary border border-0 btn-cancel rounded-2">&times;</button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex align-items-center mb-5">
+                                                        <input type="text" name="note[]" value="${note}" class="form-control small order-note w-100" placeholder="Ghi chú">
+                                                                                                        </div>`
                     $('#order-form').find('#order-details').append(str).find(`#order-products-${index + 1}`).val(detail.productId)
                 })
                 calcBill();
