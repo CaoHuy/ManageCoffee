@@ -13,6 +13,7 @@ namespace ManageCoffee.Models
         public int? Quantity { get; set; }
         public decimal Price { get; set; }
         public string Note { get; set; }
+        public int Status { get; set; }
 
         public virtual Order Order { get; set; }
         public virtual Product Product { get; set; }
