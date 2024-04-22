@@ -291,8 +291,8 @@
         $(".submenu-item.active").parents(".submenu").addClass("d-block active").parents(".has-sub").addClass("active");
 
 
-    $.get('/User/GetUserInfo', function (data) {
-        console.log(data)
+        $.get('/User/GetUserInfo', function (data) {
+            console.log(data)
             $('.auth-name').text(data.name)
             switch (data.role) {
                 case 1:
@@ -307,7 +307,7 @@
                     break;
             }
             $('.hello-auth').text('Chào bạn, ' + data.name)
-            }) 
+        })
 
         $(document).on('click', '.btn-add-product', function () {
             $(this).parents('#order-form').find('.btn-pay').addClass('d-none');
