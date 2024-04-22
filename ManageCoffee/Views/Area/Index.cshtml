@@ -99,6 +99,25 @@
                     },
                 },
                 lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Tất cả"]]
+            });
+
+
+            $(document).on('click', '.btn-remove-area', function () {
+                var id = $(this).attr('data-id')
+                $.get('/Area/GetArea/?id=' + id, function (data) {
+                    console.log(data.tables.length != 0)
+                    if (data.tables.length != 0) {
+                        Swal.fire({
+                            title: "Lưu ý!",
+                            text: "Không thể xóa khu vực có bàn!",
+                            icon: "warning",
+                            showConfirmButton: true,
+                            confirmButtonText: "OK, Đã hiểu!",
+                        })
+                    } else {
+                        $('.btn-remove-area').next().trigger('click');
+                    }
+                })
             })
         })
     </script>

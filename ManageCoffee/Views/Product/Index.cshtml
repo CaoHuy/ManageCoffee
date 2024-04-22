@@ -147,55 +147,62 @@
             })
 
             $(document).on('click', '.btn-remove-product', function () {
-                let form = $(this).parent();
+                let form = $(this).parent(), id = $(this).attr('data-id');
                 if ($('.auth-role').text() == 'Nhân viên') {
-                    Swal.fire({
-                        title: "Lưu ý!",
-                        text: "Bạn không có quyền hạn thực hiện thao tác này!",
-                        icon: "warning",
-                        showConfirmButton: true,
-                        confirmButtonText: "OK, Đã hiểu!",
-                    })
-                } else {
-                    Swal.fire({
-                        title: "Lưu ý!",
-                        text: "Sản phẩm này sẽ bị xóa khỏi các đơn hàng nó có mặt! Vẫn xác nhận xóa?",
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonText: "Vâng, xóa đi!",
-                        cancelButtonText: "Không, hủy bỏ!",
-                        reverseButtons: true
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            $.ajax({
-                                data: form.serializeArray(),
-                                url: form.attr("action"),
-                                method: form.attr("method"),
-                                success: function (response) {
-                                    Toastify({
-                                        text: response.title,
-                                        duration: 1000,
-                                        close: true,
-                                        gravity: "top",
-                                        position: "center",
-                                        backgroundColor: "var(--bs-" + response.status + ")",
-                                    }).showToast();
-                                    window.location.href = "\\Product\\Index";
-                                },
-                                error: function (response) {
-                                    Toastify({
-                                        text: response.title,
-                                        duration: 1000,
-                                        close: true,
-                                        gravity: "top",
-                                        position: "center",
-                                        backgroundColor: "var(--bs-" + response.status + ")",
-                                    }).showToast();
-                                }
-                            });
-                        }
-                    });
+
                 }
+                $.get('/Product/GetProduct/?id=' + id, function (data) {
+                    console.log(data);
+                }).done(function (data) {
+                    if (data.details.length) {
+                        Swal.fire({
+                            title: "Lưu ý!",
+                            text: "Không thể xóa sản phẩm đã có trong đơn hàng!",
+                            icon: "warning",
+                            showConfirmButton: true,
+                            confirmButtonText: "OK, Đã hiểu!",
+                        })
+                    } else {
+                        Swal.fire({
+                            title: "Lưu ý!",
+                            text: "Bạn có chắc chắn xóa?",
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonText: "Vâng, xóa đi!",
+                            cancelButtonText: "Không, hủy bỏ!",
+                            reverseButtons: true
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $.ajax({
+                                    data: form.serializeArray(),
+                                    url: form.attr("action"),
+                                    method: form.attr("method"),
+                                    success: function (response) {
+                                        Toastify({
+                                            text: response.title,
+                                            duration: 1000,
+                                            close: true,
+                                            gravity: "top",
+                                            position: "center",
+                                            backgroundColor: "var(--bs-" + response.status + ")",
+                                        }).showToast();
+                                        window.location.href = "\\Product\\Index";
+                                    },
+                                    error: function (response) {
+                                        Toastify({
+                                            text: response.title,
+                                            duration: 1000,
+                                            close: true,
+                                            gravity: "top",
+                                            position: "center",
+                                            backgroundColor: "var(--bs-" + response.status + ")",
+                                        }).showToast();
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
             })
         })
     </script>

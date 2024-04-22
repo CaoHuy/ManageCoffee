@@ -18,7 +18,7 @@ namespace ManageCoffee.Controllers
     {
         public ActionResult Index()
         {
-             ViewBag.IsActive = "catalogue";
+            ViewBag.IsActive = "catalogue";
             return View();
         }
 
@@ -29,7 +29,7 @@ namespace ManageCoffee.Controllers
             {
                 id = u.CatalogueId,
                 name = "<a class='btn btn-link text-decoration-none' href='/Catalogue/Edit/" + u.CatalogueId + "'>" + u.Name + " </ a > ",
-                action = "<form action='/Catalogue/Delete' method='POST' class='save-form'><input type='hidden' name='id' value='" + u.CatalogueId + "' data-id='" + u.CatalogueId + "'/> <button type='button' class='btn btn-link text-decoration-none btn-remove'><i class='bi bi-trash3'></i></button></form>"
+                action = "<form action='/Catalogue/Delete' method='POST' class='save-form'><input type='hidden' name='id' value='" + u.CatalogueId + "' data-id='" + u.CatalogueId + "'/><buttton type='button' class='btn btn-link text-decoration-none btn-remove-catalogue'  data-id='" + u.CatalogueId + "'><i class='bi bi-trash3'></i></buttton> <button type='button' class='d-none btn-remove'></button></form>"
             });
 
             return Json(new
@@ -39,14 +39,14 @@ namespace ManageCoffee.Controllers
         }
         public IActionResult Get(int id)
         {
-            Catalogue user = CatalogueDAO.Instance.GetCatalogueById(id);
-            ViewBag.IsActive = "user";
-            return Json(user);
+            Catalogue catalogue = CatalogueDAO.Instance.GetCatalogueById(id);
+            ViewBag.IsActive = "catalogue";
+            return Json(catalogue);
         }
 
         public IActionResult Create()
         {
-            ViewBag.IsActive = "user";
+            ViewBag.IsActive = "catalogue";
             return View();
         }
 
@@ -191,5 +191,23 @@ namespace ManageCoffee.Controllers
                 return Json(response);
             }
         }
+
+        public ActionResult GetCatalogue(int? id)
+        {
+            var context = new ManageCoffeeContext();
+            var catalogue = CatalogueDAO.Instance.GetCatalogueById(id.Value);
+            var products = context.Products.Where(p => p.CatalogueId == id).ToList();
+            if (catalogue == null)
+            {
+                return NotFound();
+            }
+            ViewBag.IsActive = "catalogue";
+            return Json(new
+            {
+                catalogue = catalogue,
+                products = products
+            });
+        }
+
     }
 }

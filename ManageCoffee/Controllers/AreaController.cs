@@ -29,7 +29,7 @@ namespace ManageCoffee.Controllers
             {
                 id = u.AreaId,
                 name = "<a class='btn btn-link text-decoration-none' href='/Area/Edit/" + u.AreaId + "'>" + u.Name + " </ a > ",
-                action = "<form action='/Area/Delete' method='POST' class='save-form'><input type='hidden' name='id' value='" + u.AreaId + "' data-id='" + u.AreaId + "'/> <button type='button' class='btn btn-link text-decoration-none btn-remove'><i class='bi bi-trash3'></i></button></form>"
+                action = "<form action='/Area/Delete' method='POST' class='save-form'><input type='hidden' name='id' value='" + u.AreaId + "' data-id='" + u.AreaId + "'/> <buttton type='button' class='btn btn-link text-decoration-none btn-remove-area'  data-id='" + u.AreaId + "'><i class='bi bi-trash3'></i></buttton> <button type='button' class='d-none btn-remove'></button></form>"
             });
 
             return Json(new
@@ -142,6 +142,23 @@ namespace ManageCoffee.Controllers
                 ViewBag.Message = ex.Message;
                 return View(area);
             }
+        }
+
+        public ActionResult GetArea(int? id)
+        {
+            var context = new ManageCoffeeContext();
+            var area = AreaDAO.Instance.GetAreaByID(id.Value);
+            var tables = context.Tables.Where(t => t.AreaId == id).ToList();
+            if (area == null)
+            {
+                return NotFound();
+            }
+            ViewBag.IsActive = "area";
+            return Json(new
+            {
+                area = area,
+                tables = tables
+            });
         }
 
         [HttpPost]
