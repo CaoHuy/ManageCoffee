@@ -51,12 +51,11 @@ namespace ManageCoffee.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (TableDAO.Instance.IsTableExists(table.Name) && TableDAO.Instance.IsAreaExists(table.AreaId))
+                if (TableDAO.Instance.IsTableAndAreaExists(table.Name, table.AreaId))
                 {
                     // Nếu cả bàn và khu vực đều tồn tại, thêm thông báo lỗi vào ModelState
                     ModelState.AddModelError("Name", "Bàn và khu vực đã tồn tại.");
-                    ModelState.AddModelError("Area", "Bàn và khu vực đã tồn tại.");
-
+                    ModelState.AddModelError("AreaId", "Bàn và khu vực đã tồn tại.");
                     var areas = AreaDAO.Instance.GetAreaList();
                     ViewBag.Areas = areas;
                     // Trả về view với dữ liệu table để người dùng có thể nhập lại
