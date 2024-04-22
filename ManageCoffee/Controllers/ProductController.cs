@@ -44,7 +44,7 @@ namespace ManageCoffee.Controllers
                 price = p.Price,
                 catalogue = GetCatalogueNameById(p?.CatalogueId),
                 image = p.Image,
-                action = "<form action='/Product/Delete' method='POST' class='save-form'><input type='hidden' name='id' value='" + p.ProductId + "' data-id='" + p.ProductId + "'/> <button type='button' class='btn btn-link text-decoration-none btn-remove-product'><i class='bi bi-trash3'></i></button></form>"
+                action = "<form action='/Product/Delete' method='POST' class='save-form'><input type='hidden' name='id' value='" + p.ProductId + "' data-id='" + p.ProductId + "'/> <button type='button' class='btn btn-link text-decoration-none btn-remove-product' data-id='" + p.ProductId + "'><i class='bi bi-trash3'></i></button></form>"
             });
 
             return Json(new
@@ -56,16 +56,18 @@ namespace ManageCoffee.Controllers
 
         public ActionResult GetProduct(int id)
         {
+            var context = new ManageCoffeeContext();
             var product = ProductDAO.Instance.GetProductByID(id);
+            var details = context.Details.Where(d => d.ProductId == id).ToList();
             if (product == null)
             {
                 return NotFound();
             }
-            var context = new ManageCoffeeContext();
             ViewBag.IsActive = "product";
             return Json(new
             {
                 product = product,
+                details = details
             });
         }
 
