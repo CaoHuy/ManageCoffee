@@ -200,7 +200,5 @@ namespace ManageCoffee.DAO
                 throw new Exception("Error checking for existing table and area: " + ex.Message);
             }
         }
-
-
     }
 }

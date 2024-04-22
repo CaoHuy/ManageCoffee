@@ -22,6 +22,10 @@ namespace ManageCoffee.Controllers
         }
         public IActionResult Index()
         {
+            var catalogues = CatalogueDAO.Instance.GetCataloguesList(); // Lấy danh sách catalogue từ cơ sở dữ liệu hoặc từ nguồn dữ liệu khác
+            ViewBag.Catalogues = catalogues;
+            var areas = AreaDAO.Instance.GetAreaList(); // Lấy danh sách khu vực từ cơ sở dữ liệu hoặc từ nguồn dữ liệu khác
+            ViewBag.areas = areas;
             return View();
         }
 
@@ -51,7 +55,7 @@ namespace ManageCoffee.Controllers
             }
             order.TotalPrice = int.Parse(request["total_price"]);
             dbContext.Orders.Add(order);
-            dbContext.SaveChanges();    
+            dbContext.SaveChanges();
             for (int i = 0; i < request["quantity[]"].Count(); i++)
             {
                 Detail detail = new Detail();
@@ -87,7 +91,7 @@ namespace ManageCoffee.Controllers
             dbContext.SaveChanges();
             order.RemoveDetails();
             //Tạo detail
-            System.Console.WriteLine(request["quantity[]"]+ " danh sách số lg");
+            System.Console.WriteLine(request["quantity[]"] + " danh sách số lg");
             for (int i = 0; i < request["quantity[]"].Count(); i++)
             {
                 Detail detail = new Detail();
@@ -95,7 +99,7 @@ namespace ManageCoffee.Controllers
                 detail.ProductId = int.Parse(request["id[]"][i]);
                 detail.Quantity = int.Parse(request["quantity[]"][i]);
                 detail.Price = int.Parse(request["price[]"][i]);
-                System.Console.WriteLine("Đây là product ID: "+int.Parse(request["id[]"][i]));
+                System.Console.WriteLine("Đây là product ID: " + int.Parse(request["id[]"][i]));
                 DetailDAO.Instance.AddNew(detail);
             }
 
@@ -117,11 +121,52 @@ namespace ManageCoffee.Controllers
                     details = order.GetDetail(),
                     table = order.GetTable(),
                 });
-            } 
+            }
             else
             {
                 return BadRequest();
             }
         }
+
+
+
+        public string GetCatalogueNameById(int? catalogueId)
+        {
+            if (catalogueId.HasValue)
+            {
+                using (var context = new ManageCoffeeContext())
+                {
+                    var catalogue = context.Catalogues.Find(catalogueId);
+                    return catalogue?.Name ?? "Không có";
+                }
+            }
+            return "Không có";
+        }
+
+        public IActionResult GetCatalogueName(int catalogueId)
+        {
+            string catalogueName = GetCatalogueNameById(catalogueId);
+            return Json(new { catalogueName });
+        }
+
+        public string GetAreaNameById(int? areaId)
+        {
+            if (areaId.HasValue)
+            {
+                using (var context = new ManageCoffeeContext())
+                {
+                    var area = context.Areas.Find(areaId);
+                    return area?.Name ?? "Không có";
+                }
+            }
+            return "Không có";
+        }
+
+        public IActionResult GetAreaName(int areaId)
+        {
+            string areaName = GetAreaNameById(areaId);
+            return Json(new { areaName });
+        }
+
     }
 }
