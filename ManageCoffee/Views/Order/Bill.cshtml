@@ -84,7 +84,7 @@
     $(document).ready(function () {
         const order_id = parseInt($('.order-id').val());
 
-        $.get(`/Setting/Load`, function (settingList) {
+        $.get(`/Config/Load`, function (settingList) {
             $.each(settingList, function (index, setting) {
                 if (setting.key == "shop_name") {
                     $('[name=shop_name]').each(function () {
