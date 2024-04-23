@@ -35,11 +35,23 @@ namespace ManageCoffee.Controllers
                     detailId = detail.DetailId,
                     tableName = (orderDAO.GetOrderByID(detail.OrderId).TableId != null) ? tableDAO.GetTableByID(orderDAO.GetOrderByID(detail.OrderId).TableId).Name : ("Đơn " + detail.OrderId + "(Mang đi)"),
                     productName = productDAO.GetProductByID(detail.ProductId).Name,
+                    productImg = productDAO.GetProductByID(detail.ProductId).Image,
                     quantity = detail.Quantity
                 };
                 resultList.Add(obj);
             }
             return Json(resultList);
+        }
+
+        public IActionResult CompleteDetail(int id)
+        {
+            Detail detail = DetailDAO.Instance.GetDetailByID(id);
+            detail.Status = 1;
+            DetailDAO.Instance.Update(detail);
+            var context = new ManageCoffeeContext();
+            Product p = context.Products.FirstOrDefault(p => p.ProductId == detail.ProductId);
+            return Json(new { detail = detail, productName = p.Name });
+
         }
     }
 }

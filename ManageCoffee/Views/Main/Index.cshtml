@@ -28,6 +28,19 @@
                         </span>
                     </button>
                 </div>
+                <div id="bell" class="bell p-0 z-5 ms-2">
+                    <button type="button" class="btn btn-primary dropdown-toggle position-relative"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-bell h2"></i>
+                        <span
+                            class="position-absolute number-meals start-0 translate-middle badge rounded-pill bg-danger d-none"
+                            style="top: 16% !important">
+                        </span>
+                        <ul class="dropdown-menu dropdown-list">
+                        </ul>
+                    </button>
+                </div>
+
             </div>
             <div class="col-11 d-flex justify-content-start mt-3">
                 <div class="btn-group d-flex justify-content-center align-items-center" id="sreach-area">
@@ -161,7 +174,9 @@
                 splide.mount();
             }
 
+            localStorage.setItem('a', [])
             $(document).ready(function () {
+                loadDropdown()
                 $('#sidebar').removeClass('active')
                 loadTable('all', 'area-all');
                 loadProduct('all');
@@ -499,20 +514,20 @@
                             modalEx.find('img').attr('src', str);
                         });
                         modalEx.modal('show');
-                        console.log(str);
-                        modalEx.on('hidden.bs.modal', function (e) {
-                            $.ajax({
-                                url: '/Order/Pay',
-                                type: 'POST',
-                                data: { id: id, payment: '2' },
-                                success: function () {
-                                    window.location.href = "/Main/Index";
-                                },
-                                error: function (xhr, status, error) {
-                                    console.error(xhr.responseText);
-                                }
+        @* console.log(str); *@
+                            modalEx.on('hidden.bs.modal', function (e) {
+                                $.ajax({
+                                    url: '/Order/Pay',
+                                    type: 'POST',
+                                    data: { id: id, payment: '2' },
+                                    success: function () {
+                                        window.location.href = "/Main/Index";
+                                    },
+                                    error: function (xhr, status, error) {
+                                        console.error(xhr.responseText);
+                                    }
+                                });
                             });
-                        });
                     } else {
                         $.ajax({
                             url: '/Order/Pay',
@@ -527,18 +542,64 @@
                         });
                     }
                 });
+                });
+
+                $('.number-meals').text(JSON.parse(localStorage.getItem('localDetails')).length).removeClass('d-none');
+
+                $(document).on('click', '.btn-remove-bartender', function (e) {
+                    e.preventDefault()
+                    var localDetails = JSON.parse(localStorage.getItem('localDetails')), newlocalDetails = [];
+                    let detail_id = $(this).attr('data-id');
+                    $.each(localDetails, function (i, detail_product_name) {
+                        if (detail_product_name.detail.detailId != detail_id) {
+                            newlocalDetails.push({ detail: detail_product_name.detail, productName: detail_product_name.productName })
+                        }
+                    })
+                    localStorage.setItem('localDetails', JSON.stringify(newlocalDetails))
+                    window.location.href = "/Main/Index";
             })
+
         });
 
-        function calcBillMain() {
-            let total = 0;
-            $('#main-form .bill-detail').each(function () {
-                let sum = $(this).find('.bill-price').val() * $(this).find('.bill-quantity').val();
-                $(this).find('.bill-total-price').text(number_format(sum));
-                total += sum;
-            })
-            $('#main-form').find('.input-bill-total').val(total)
-            $('#main-form').find('.bill-total').text(number_format(total))
-        }
-    </script>
-}
+            function calcBillMain() {
+                let total = 0;
+                $('#main-form .bill-detail').each(function () {
+                    let sum = $(this).find('.bill-price').val() * $(this).find('.bill-quantity').val();
+                    $(this).find('.bill-total-price').text(number_format(sum));
+                    total += sum;
+                })
+                $('#main-form').find('.input-bill-total').val(total)
+                $('#main-form').find('.bill-total').text(number_format(total))
+            }
+
+            function loadDropdown() {
+                var localDetails = JSON.parse(localStorage.getItem('localDetails'));
+                let str = ``
+                $.each(localDetails, function (i, detail_product_name) {
+                    str += `<li><a class="dropdown-item btn-remove-bartender" href="#" data-id=${detail_product_name.detail.detailId}>${detail_product_name.productName} Đơn hàng số ${detail_product_name.detail.orderId}</a></li>`
+                })
+                $('.dropdown-list').append(str)
+            }
+
+            var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+            connection.on("Noti", function (detail) {
+                console.log("Thông báo:", detail);
+                var localDetails = localStorage.getItem('localDetails');
+                if (!localDetails || localDetails.length === 0) {
+                    localDetails = [];
+                } else {
+                    localDetails = JSON.parse(localDetails);
+                }
+                localDetails.push(detail);
+                localStorage.setItem('localDetails', JSON.stringify(localDetails))
+                $('.number-meals').text(localDetails.length).removeClass('d-none');
+                window.location.href = "/Main/Index";
+            });
+
+            connection.start().then(function () {
+                console.log("Kết nối SignalR đã được thiết lập.");
+            }).catch(function (err) {
+                console.error("Lỗi khi kết nối SignalR: " + err);
+            });
+        </script>
+    }
