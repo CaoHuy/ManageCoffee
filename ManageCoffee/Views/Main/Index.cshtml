@@ -28,6 +28,16 @@
                         </span>
                     </button>
                 </div>
+                <div id="bell" class="bell p-0 z-5 ms-2">
+                    <button type="button" class="btn-show-offcanvas btn btn-primary position-relative">
+                        <i class="bi bi-bell h2"></i>
+                        <span
+                            class="position-absolute number-meals start-0 translate-middle badge rounded-pill bg-danger d-none"
+                            style="top: 16% !important">
+                        </span>
+                    </button>
+                </div>
+
             </div>
             <div class="row mt-3">
                 <div class="col-12">
@@ -150,7 +160,9 @@
                 splide.mount();
             }
 
+            localStorage.setItem('a', 0)
             $(document).ready(function () {
+
                 $('#sidebar').removeClass('active')
                 loadTable('all');
                 loadProduct('all');
@@ -171,19 +183,19 @@
                                 $.get(`/Main/GetAreaName?areaId=${table.areaId}`, function (response) {
                                     let areaName = response.areaName;
                                     str_table += `
-                                <li class="splide__slide pt-3">
-                                    <label for="table-${table.tableId}" class="cursor-pointer table-label">
-                                        <div class="card table-card div-hover-effect shadow-sm p-3 text-center rounded-4 rounded-lg-5"
-                                            style="width: 12rem;">
-                                            <span class="text-overlay">${areaName}</span>
-                                            <div class="card-body pt-0">
-                                                <h4 class="card-title text-uppercase text-primary">${table.name}</h4>
-                                                <small>${table_statusStr}</small>
-                                            </div>
-                                        </div>
-                                    <input type="radio" name="table" id="table-${table.tableId}" value="${table.tableId}" data-status="${table.status}" class="d-none table-select" />
-                                    </label>
-                                </li>`;
+                                                                                                                                                                                                                                                                <li class="splide__slide pt-3">
+                                                                                                                                                                                                                                                                    <label for="table-${table.tableId}" class="cursor-pointer table-label">
+                                                                                                                                                                                                                                                                        <div class="card table-card div-hover-effect shadow-sm p-3 text-center rounded-4 rounded-lg-5"
+                                                                                                                                                                                                                                                                            style="width: 12rem;">
+                                                                                                                                                                                                                                                                            <span class="text-overlay">${areaName}</span>
+                                                                                                                                                                                                                                                                            <div class="card-body pt-0">
+                                                                                                                                                                                                                                                                                <h4 class="card-title text-uppercase text-primary">${table.name}</h4>
+                                                                                                                                                                                                                                                                                <small>${table_statusStr}</small>
+                                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                                    <input type="radio" name="table" id="table-${table.tableId}" value="${table.tableId}" data-status="${table.status}" class="d-none table-select" />
+                                                                                                                                                                                                                                                                    </label>
+                                                                                                                                                                                                                                                                </li>`;
                                     $('#table-list').html(str_table);
                                     slider_config();
                                 });
@@ -198,19 +210,19 @@
                                 $.get(`/Main/GetAreaName?areaId=${table.areaId}`, function (response) {
                                     let areaName = response.areaName;
                                     str_table += `
-                                <li class="splide__slide pt-3">
-                                    <label for="table-${table.tableId}" class="cursor-pointer table-label">
-                                        <div class="card table-card div-hover-effect shadow-sm p-3 text-center rounded-4 rounded-lg-5"
-                                            style="width: 12rem;">
-                                            <span class="text-overlay">${areaName}</span>
-                                            <div class="card-body pt-0">
-                                                <h4 class="card-title text-uppercase text-primary">${table.name}</h4>
-                                                <small>${table_statusStr}</small>
-                                            </div>
-                                        </div>
-                                    <input type="radio" name="table" id="table-${table.tableId}" value="${table.tableId}" data-status="${table.status}" class="d-none table-select" />
-                                    </label>
-                                </li>`;
+                                                                                                                                                                                                                                                                <li class="splide__slide pt-3">
+                                                                                                                                                                                                                                                                    <label for="table-${table.tableId}" class="cursor-pointer table-label">
+                                                                                                                                                                                                                                                                        <div class="card table-card div-hover-effect shadow-sm p-3 text-center rounded-4 rounded-lg-5"
+                                                                                                                                                                                                                                                                            style="width: 12rem;">
+                                                                                                                                                                                                                                                                            <span class="text-overlay">${areaName}</span>
+                                                                                                                                                                                                                                                                            <div class="card-body pt-0">
+                                                                                                                                                                                                                                                                                <h4 class="card-title text-uppercase text-primary">${table.name}</h4>
+                                                                                                                                                                                                                                                                                <small>${table_statusStr}</small>
+                                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                                    <input type="radio" name="table" id="table-${table.tableId}" value="${table.tableId}" data-status="${table.status}" class="d-none table-select" />
+                                                                                                                                                                                                                                                                    </label>
+                                                                                                                                                                                                                                                                </li>`;
                                     $('#table-list').html(str_table);
                                     slider_config();
                                 });
@@ -222,8 +234,8 @@
                 function loadProduct(valueToChange) {
                     let str_product = '';
                     $.get('/Main/Load', function (data) {
-                        console.log(data); // In ra dữ liệu sản phẩm để kiểm tra
-                        let productsExist = false;
+            @* console.log(data); // In ra dữ liệu sản phẩm để kiểm tra *@
+                            let productsExist = false;
                         $.each(data.products, function (index, product) {
                             if (valueToChange === 'all' || product.catalogueId == valueToChange) {
                                 let pro_catalogue = ``;
@@ -231,51 +243,51 @@
                                 $.get(`/Main/GetCatalogueName?catalogueId=${product.catalogueId}`, function (response) {
                                     let catalogueName = response.catalogueName;
                                     str_product += `
-                                <div class="col-6 col-md-3 col-lg-2 product-col">
-                                    <div class="card product-card bg-transparent cursor-pointer" data-id="${product.productId}">
-                                        <div class="ratio ratio-16x9 mb-2 div-hover-effect">
-                                            <img src="${product.image}" onerror="this.onerror=null; this.src='/img/placeholder.jpg'" class="card-img-top rounded-4 rounded-lg-5 object-fit-cover" alt="${product.name}">
-                                        </div>
-                                        <div class="row px-3 justify-content-start align-items-center">
-                                            <div class="col-12 p-0">
-                                                <p class="text-primary card-title mb-0 fw-bold">${product.name}</p>
-                                            </div>
-                                            <div class="col-8">
-                                                <ul class="card-text ps-0 d-flex text-secondary" style="list-style-type: none;">
-                                                    <li><small><i class="bi bi-bookmarks-fill"></i>${catalogueName}</small></li>
-                                                </ul>
-                                            </div>
-                                            <div class="col-2 p-0">
-                                                <div class="ratio ratio-1x1 text-center mt-1">
-                                                    <span class="text-primary border-primary rounded-3 bg-light-primary align-middle fw-bold fs-5 pt-2">${number_format(product.price / 1000)}</span>
-                                                </div>
-                                            </div>
-                                            <div class="col-2 dropstart btn-group product-menu" data-id="${product.productId}">
-                                                <button class="btn btn-link mb-0 px-2 py-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="bi bi-three-dots-vertical"></i>
-                                                </button>
-                                                <ul class="dropdown-menu p-2">
-                                                    <li>
-                                                        <a class="cursor-pointer dropdown-item btn-update-product" data-id="${product.productId}">
-                                                            <small><i class="bi bi-pencil-square"></i> Sửa món</small>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <hr>
-                                                    </li>
-                                                    <li>
-                                                        <form action="/Product/Delete" method="post" class="save-form">
-                                                            <input type="hidden" name="choices[]" value="${product.productId}">
-                                                            <button type="submit" class="cursor-pointer text-danger dropdown-item btn-remove">
-                                                                <small><i class="bi bi-trash3"></i> Xóa món</small>
-                                                            </button>
-                                                        </form>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>`;
+                                                                                                                                                                                                                                                                <div class="col-6 col-md-3 col-lg-2 product-col">
+                                                                                                                                                                                                                                                                    <div class="card product-card bg-transparent cursor-pointer" data-id="${product.productId}">
+                                                                                                                                                                                                                                                                        <div class="ratio ratio-16x9 mb-2 div-hover-effect">
+                                                                                                                                                                                                                                                                            <img src="${product.image}" onerror="this.onerror=null; this.src='/img/placeholder.jpg'" class="card-img-top rounded-4 rounded-lg-5 object-fit-cover" alt="${product.name}">
+                                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                                        <div class="row px-3 justify-content-start align-items-center">
+                                                                                                                                                                                                                                                                            <div class="col-12 p-0">
+                                                                                                                                                                                                                                                                                <p class="text-primary card-title mb-0 fw-bold">${product.name}</p>
+                                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                            <div class="col-8">
+                                                                                                                                                                                                                                                                                <ul class="card-text ps-0 d-flex text-secondary" style="list-style-type: none;">
+                                                                                                                                                                                                                                                                                    <li><small><i class="bi bi-bookmarks-fill"></i>${catalogueName}</small></li>
+                                                                                                                                                                                                                                                                                </ul>
+                                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                            <div class="col-2 p-0">
+                                                                                                                                                                                                                                                                                <div class="ratio ratio-1x1 text-center mt-1">
+                                                                                                                                                                                                                                                                                    <span class="text-primary border-primary rounded-3 bg-light-primary align-middle fw-bold fs-5 pt-2">${number_format(product.price / 1000)}</span>
+                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                            <div class="col-2 dropstart btn-group product-menu" data-id="${product.productId}">
+                                                                                                                                                                                                                                                                                <button class="btn btn-link mb-0 px-2 py-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                                                                                                                                                                                                                                    <i class="bi bi-three-dots-vertical"></i>
+                                                                                                                                                                                                                                                                                </button>
+                                                                                                                                                                                                                                                                                <ul class="dropdown-menu p-2">
+                                                                                                                                                                                                                                                                                    <li>
+                                                                                                                                                                                                                                                                                        <a class="cursor-pointer dropdown-item btn-update-product" data-id="${product.productId}">
+                                                                                                                                                                                                                                                                                            <small><i class="bi bi-pencil-square"></i> Sửa món</small>
+                                                                                                                                                                                                                                                                                        </a>
+                                                                                                                                                                                                                                                                                    </li>
+                                                                                                                                                                                                                                                                                    <li>
+                                                                                                                                                                                                                                                                                        <hr>
+                                                                                                                                                                                                                                                                                    </li>
+                                                                                                                                                                                                                                                                                    <li>
+                                                                                                                                                                                                                                                                                        <form action="/Product/Delete" method="post" class="save-form">
+                                                                                                                                                                                                                                                                                            <input type="hidden" name="choices[]" value="${product.productId}">
+                                                                                                                                                                                                                                                                                            <button type="submit" class="cursor-pointer text-danger dropdown-item btn-remove">
+                                                                                                                                                                                                                                                                                                <small><i class="bi bi-trash3"></i> Xóa món</small>
+                                                                                                                                                                                                                                                                                            </button>
+                                                                                                                                                                                                                                                                                        </form>
+                                                                                                                                                                                                                                                                                    </li>
+                                                                                                                                                                                                                                                                                </ul>
+                                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                                                </div>`;
                                     productsExist = true;
                                     $('#product-list').html(str_product);
                                 });
@@ -370,26 +382,26 @@
                         form.find('[name=id]').val(data.order.orderId)
                         form.find('.bill-total').text(number_format(data.order.totalPrice));
                         form.find('.input-bill-total').val(data.order.totalPrice);
-                        console.log(data)
-                        if (data.order.orderId != null) {
+            @* console.log(data) *@
+                                                                                                                                                                                                                        if (data.order.orderId != null) {
                             form.attr('action', '/Main/Edit')
                         }
                         $('.bill-details').empty();
                         $.each(data.details, function (index, detail) {
                             $.get('/Product/getProduct/?id=' + detail.productId, function (response) {
-                                console.log(response)
-                                const str = `<div class="text-dark d-flex flex-column align-items-between w-100 ms-1 mt-2 bill-detail" data-id=${response.productId}>
-                                        <div class="text-start px-1 fw-bold">${response.product.name}</div>
-                                        <div class="row">
-                                            <div class="col-4 text-end pe-5 d-flex align-items-center"><span class="me-2 d-flex align-items-center">${number_format(response.product.price)}</span></div>
-                                            <input type="hidden" name="id[]" value="${response.product.productId}"/>
-                                            <input type="hidden" name="price[]" class="text-center px-1 bill-price border border-0" value="${response.product.price}">
-                                            <input type="number" name="quantity[]" class="col-2 text-center px-1 bill-quantity border border-0" value="${detail.quantity}">
-                                            <div class="col-4 text-end px-1 d-flex justify-content-end"><span class="bill-total-price me-2 d-flex align-items-center">${number_format(response.product.price * detail.quantity)}</span></div>
-                                            <div class="col-1">
-                                                <button type="button" class="btn btn-outline-secondary border border-0 btn-cancel rounded-2">&times;</button>
-                                            </div>
-                                        </div>`
+            @* console.log(response) *@
+                                                                                                                                                                                                                                const str = `<div class="text-dark d-flex flex-column align-items-between w-100 ms-1 mt-2 bill-detail" data-id=${response.productId}>
+                                                                                                                                                                                                                                                                        <div class="text-start px-1 fw-bold">${response.product.name}</div>
+                                                                                                                                                                                                                                                                        <div class="row">
+                                                                                                                                                                                                                                                                            <div class="col-4 text-end pe-5 d-flex align-items-center"><span class="me-2 d-flex align-items-center">${number_format(response.product.price)}</span></div>
+                                                                                                                                                                                                                                                                            <input type="hidden" name="id[]" value="${response.product.productId}"/>
+                                                                                                                                                                                                                                                                            <input type="hidden" name="price[]" class="text-center px-1 bill-price border border-0" value="${response.product.price}">
+                                                                                                                                                                                                                                                                            <input type="number" name="quantity[]" class="col-2 text-center px-1 bill-quantity border border-0" value="${detail.quantity}">
+                                                                                                                                                                                                                                                                            <div class="col-4 text-end px-1 d-flex justify-content-end"><span class="bill-total-price me-2 d-flex align-items-center">${number_format(response.product.price * detail.quantity)}</span></div>
+                                                                                                                                                                                                                                                                            <div class="col-1">
+                                                                                                                                                                                                                                                                                <button type="button" class="btn btn-outline-secondary border border-0 btn-cancel rounded-2">&times;</button>
+                                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                        </div>`
                                 $('.bill-details').append(str);
                                 var quantity = 0;
                                 $('.bill-quantity').each(function () {
@@ -440,19 +452,19 @@
                     const id = parseInt($(this).attr('data-id'));
                     $('#main-form').find('.btn-pay').addClass('d-none');
                     $.get('/Product/GetProduct/?id=' + id, function (response) {
-                        console.log(response.product)
-                        const str = `<div class="text-dark d-flex flex-column align-items-between w-100 ms-1 mt-2 bill-detail" data-id=${response.product.productId}>
-                                    <div class="text-start px-1 fw-bold">${response.product.name}</div>
-                                    <div class="row">
-                                        <div class="col-4 text-end pe-5  d-flex align-items-center"><span class="me-2 d-flex align-items-center">${number_format(response.product.price)}</span></div>
-                                        <input type="hidden" name="id[]" value="${response.product.productId}"/>
-                                        <input type="hidden" name="price[]" class="text-center px-1 bill-price border border-0" value="${response.product.price}">
-                                        <input type="number" name="quantity[]" class="col-2 text-center px-1 bill-quantity border border-0" value="1">
-                                        <div class="col-4 text-end px-1 d-flex justify-content-end"><span class="bill-total-price me-2 d-flex align-items-center">${number_format(response.product.price)}</span></div>
-                                        <div class="col-1">
-                                            <button type="button" class="btn btn-outline-secondary border border-0 btn-cancel rounded-2">&times;</button>
-                                        </div>
-                                </div>`
+            @* console.log(response.product) *@
+                                                                                                                                                                                const str = `<div class="text-dark d-flex flex-column align-items-between w-100 ms-1 mt-2 bill-detail" data-id=${response.product.productId}>
+                                                                                                                                                                                                                                                                    <div class="text-start px-1 fw-bold">${response.product.name}</div>
+                                                                                                                                                                                                                                                                    <div class="row">
+                                                                                                                                                                                                                                                                        <div class="col-4 text-end pe-5  d-flex align-items-center"><span class="me-2 d-flex align-items-center">${number_format(response.product.price)}</span></div>
+                                                                                                                                                                                                                                                                        <input type="hidden" name="id[]" value="${response.product.productId}"/>
+                                                                                                                                                                                                                                                                        <input type="hidden" name="price[]" class="text-center px-1 bill-price border border-0" value="${response.product.price}">
+                                                                                                                                                                                                                                                                        <input type="number" name="quantity[]" class="col-2 text-center px-1 bill-quantity border border-0" value="1">
+                                                                                                                                                                                                                                                                        <div class="col-4 text-end px-1 d-flex justify-content-end"><span class="bill-total-price me-2 d-flex align-items-center">${number_format(response.product.price)}</span></div>
+                                                                                                                                                                                                                                                                        <div class="col-1">
+                                                                                                                                                                                                                                                                            <button type="button" class="btn btn-outline-secondary border border-0 btn-cancel rounded-2">&times;</button>
+                                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                                </div>`
                         $('.bill-details').append(str);
                         calcBillMain()
                         $('.bill-quantity').each(function () {
@@ -505,20 +517,20 @@
                                 modalEx.find('img').attr('src', str);
                             });
                             modalEx.modal('show');
-                            console.log(str);
-                            modalEx.on('hidden.bs.modal', function (e) {
-                                $.ajax({
-                                    url: '/Order/Pay',
-                                    type: 'POST',
-                                    data: { id: id, payment: '2' },
-                                    success: function () {
-                                        window.location.href = "/Main/Index";
-                                    },
-                                    error: function (xhr, status, error) {
-                                        console.error(xhr.responseText);
-                                    }
+            @* console.log(str); *@
+                                modalEx.on('hidden.bs.modal', function (e) {
+                                    $.ajax({
+                                        url: '/Order/Pay',
+                                        type: 'POST',
+                                        data: { id: id, payment: '2' },
+                                        success: function () {
+                                            window.location.href = "/Main/Index";
+                                        },
+                                        error: function (xhr, status, error) {
+                                            console.error(xhr.responseText);
+                                        }
+                                    });
                                 });
-                            });
                         } else {
                             $.ajax({
                                 url: '/Order/Pay',
@@ -533,7 +545,11 @@
                             });
                         }
                     });
-                })
+                });
+
+                $('.number-meals').text(localStorage.getItem('a')).removeClass('d-none')
+
+
             });
 
             function calcBillMain() {
@@ -546,5 +562,21 @@
                 $('#main-form').find('.input-bill-total').val(total)
                 $('#main-form').find('.bill-total').text(number_format(total))
             }
+
+            var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+            connection.on("Noti", function (str) {
+                console.log("Thông báo:", str);
+                var localSave = localStorage.getItem('a')
+                var temp = parseInt(localSave)
+                temp++;
+                localStorage.setItem('a', temp);
+                $('.number-meals').text(localStorage.getItem('a')).removeClass('d-none')
+
+            });
+            connection.start().then(function () {
+                console.log("Kết nối SignalR đã được thiết lập.");
+            }).catch(function (err) {
+                console.error("Lỗi khi kết nối SignalR: " + err);
+            });
         </script>
     }

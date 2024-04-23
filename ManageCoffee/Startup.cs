@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ManageCoffee.Controllers.Hubs;
 using ManageCoffee.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -24,6 +25,8 @@ namespace ManageCoffee
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddRazorPages();
+            services.AddSignalR();
             services.AddHttpContextAccessor();  // Đăng ký dịch vụ truy cập vào HttpContext 
             services.AddDistributedMemoryCache();           // Đăng ký dịch vụ lưu cache trong bộ nhớ (Session sẽ sử dụng nó)
             services.AddSession(cfg =>
@@ -60,6 +63,7 @@ namespace ManageCoffee
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<Notification>("/chatHub");
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Login}/{action=Index}/{id?}");
