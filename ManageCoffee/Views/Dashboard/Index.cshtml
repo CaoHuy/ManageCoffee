@@ -236,11 +236,10 @@
             function reloadChart() {
                 var revenueMapBy_mm = {}, sumRevenue = 0, numProduct = 0, numOrder = 0, revenueMap = {};
                 $.get(`/DashBoard/Load/?range=${$('input[name="dateRange"]').val()}`, function (data) {
-                    console.log(data);
                     numProduct = data.numberProducts;
+                    console.log(numProduct)
                     $.each(data.dailiRevenues, function (i, order) {
                         ++numOrder;
-                        ++numProduct;
                         sumRevenue += order.totalPrice;
                         if (revenueMap.hasOwnProperty(moment(order.createdAt).format('DD-MM-YYYY'))) {
                             revenueMap[moment(order.createdAt).format('DD-MM-YYYY')] += order.totalPrice;
