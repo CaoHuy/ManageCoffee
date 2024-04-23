@@ -9,10 +9,10 @@ namespace ManageCoffee.Controllers.Hubs
 {
     public class Notification : Hub
     {
-        public async Task SendNotification(string str)
+        public async Task SendNotification(object details)
         {
-            System.Console.WriteLine("" + str);
-            await Clients.All.SendAsync("Noti", str);
+            System.Console.WriteLine("" + details);
+            await Clients.All.SendAsync("Noti", details);
         }
     }
 }

@@ -48,7 +48,10 @@ namespace ManageCoffee.Controllers
             Detail detail = DetailDAO.Instance.GetDetailByID(id);
             detail.Status = 1;
             DetailDAO.Instance.Update(detail);
-            return Ok();
+            var context = new ManageCoffeeContext();
+            Product p = context.Products.FirstOrDefault(p => p.ProductId == detail.ProductId);
+            return Json(new { detail = detail, productName = p.Name });
+
         }
     }
 }
