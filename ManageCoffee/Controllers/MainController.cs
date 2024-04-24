@@ -8,10 +8,12 @@ using ManageCoffee.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using ManageCoffee.Models.Authentication;
 using Newtonsoft.Json;
 
 namespace ManageCoffee.Controllers
 {
+    [Authentication]
     public class MainController : Controller
     {
         private ManageCoffeeContext dbContext;

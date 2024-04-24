@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using ManageCoffee.DAO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using ManageCoffee.Models.Authentication;
 
 namespace ManageCoffee.Controllers
 {
+    [Authentication]
     public class LogController : Controller
     {
         LogDAO dao = new LogDAO();

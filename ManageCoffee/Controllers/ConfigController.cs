@@ -7,10 +7,12 @@ using ManageCoffee.DAO;
 using ManageCoffee.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ManageCoffee.Models.Authentication;
 using Microsoft.Extensions.Logging;
 
 namespace ManageCoffee.Controllers
 {
+    [Authentication]
     public class ConfigController : Controller
     {
         public ActionResult Index()

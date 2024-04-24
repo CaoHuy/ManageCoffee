@@ -11,10 +11,11 @@ using ManageCoffee.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using ManageCoffee.Models.Authentication;
 
 namespace ManageCoffee.Controllers
 {
-
+    [Authentication]
     public class PasswordController : Controller
     {
         private readonly ManageCoffeeContext _db;
