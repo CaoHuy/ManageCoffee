@@ -59,6 +59,9 @@
 
             $.get('/User/GetUserInfo', function (data) {
                 switch (data.role) {
+                    case 2:
+                        $('.btn-create').remove();
+                        break;
                     case 3:
                         $('.btn-create').remove();
                         break;

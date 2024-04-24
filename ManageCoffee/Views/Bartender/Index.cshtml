@@ -19,18 +19,18 @@
                         $str += `</div><hr>`
                     }
                     $str += `<div class="col-6 col-md-3 col-lg-2 product-col">
-                                                                                                                                                                                                                <div class="btn btn-complete-detail card product-card bg-transparent" data-id="${detail.detailId}">
-                                                                                                                                                                                                                    <div class="ratio ratio-16x9 mb-2 div-hover-effect">
-                                                                                                                                                                                                                        <img src="${detail.productImg}" class="card-img-top rounded-4 rounded-lg-5 object-fit-cover" alt="Đa">
-                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                    <div class="row px-3 justify-content-start align-items-center">
-                                                                                                                                                                                                                        <div class="col-12 d-flex p-0">
-                                                                                                                                                                                                                            <p class="text-primary card-title mb-0 me-3 fw-bold">${detail.productName}</p>
-                                                                                                                                                                                                                            <p class="text-dark card-title mb-0 fw-bold">x${detail.quantity}</p>
-                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                            </div>`
+                        <div class="btn btn-complete-detail card product-card bg-transparent" data-id="${detail.detailId}">
+                            <div class="ratio ratio-16x9 mb-2 div-hover-effect">
+                                <img src="${detail.productImg}" class="card-img-top rounded-4 rounded-lg-5 object-fit-cover" alt="Đa">
+                            </div>
+                            <div class="row px-3 justify-content-start align-items-center">
+                                <div class="col-12 d-flex p-0">
+                                    <p class="text-primary card-title mb-0 me-3 fw-bold">${detail.productName}</p>
+                                    <p class="text-dark card-title mb-0 fw-bold">x${detail.quantity}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`
                 })
                 $('.details').append($str);
             })
