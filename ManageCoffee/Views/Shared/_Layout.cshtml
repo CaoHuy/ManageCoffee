@@ -86,7 +86,7 @@
                             </li>
                             <li class="sidebar-item @(ViewBag.IsActive == "bartender" ? "active" : "")">
                                 <a asp-controller="Bartender" asp-action="Index" class='sidebar-link'>
-                                    <i class="icon-mid d-flex algin-items-center bi bi-receipt"></i>
+                                    <i class="icon-mid d-flex algin-items-center bi bi-cup-straw"></i>
                                     <span>Pha chế</span>
                                 </a>
                             </li>
@@ -367,7 +367,15 @@
                     showConfirmButton: true,
                     confirmButtonText: "OK, Đã hiểu!",
                 });
-            } else if (status == "Có khách") {
+            }else if ($('.auth-role').text() == 'Admin') {
+                Swal.fire({
+                    title: "Lưu ý!",
+                    text: "Bạn không có quyền hạn thực hiện thao tác này!",
+                    icon: "warning",
+                    showConfirmButton: true,
+                    confirmButtonText: "OK, Đã hiểu!",
+                })
+            }  else if (status == "Có khách") {
                 Swal.fire({
                     title: "Lưu ý!",
                     text: "Hiện tại bàn đang có khách, không thể xóa!",
