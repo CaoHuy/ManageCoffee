@@ -36,7 +36,8 @@ namespace ManageCoffee.Controllers
                     tableName = (orderDAO.GetOrderByID(detail.OrderId).TableId != null) ? tableDAO.GetTableByID(orderDAO.GetOrderByID(detail.OrderId).TableId).Name : ("Đơn " + detail.OrderId + "(Mang đi)"),
                     productName = productDAO.GetProductByID(detail.ProductId).Name,
                     productImg = productDAO.GetProductByID(detail.ProductId).Image,
-                    quantity = detail.Quantity
+                    quantity = detail.Quantity,
+                    note = detail.Note,
                 };
                 resultList.Add(obj);
             }
@@ -53,9 +54,11 @@ namespace ManageCoffee.Controllers
             var context = new ManageCoffeeContext();
             Product p = context.Products.FirstOrDefault(p => p.ProductId == detail.ProductId);
             var str = p.Name + " - " + ((orderDAO.GetOrderByID(detail.OrderId).TableId != null) ? tableDAO.GetTableByID(orderDAO.GetOrderByID(detail.OrderId).TableId).Name : ("Đơn " + detail.OrderId + "(Mang đi)"));
-            return Json(new { detail = detail, 
-                            productName = str
-                        });
+            return Json(new
+            {
+                detail = detail,
+                productName = str
+            });
         }
     }
 }

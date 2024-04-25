@@ -44,12 +44,15 @@
             </div>
             <div class="col-11 d-flex justify-content-start mt-3">
                 <div class="btn-group d-flex justify-content-center align-items-center" id="sreach-area">
-                    <input type="radio" name="search-option" value="area-all" id="area-status-all" class="btn-check me-2" checked>
+                    <input type="radio" name="search-option" value="area-all" id="area-status-all"
+                        class="btn-check me-2" checked>
                     <label class="btn btn-outline-primary table-status" for="area-status-all">Tất cả khu vực</label>
                     @foreach (var area in ViewBag.Areas)
                     {
-                                <input type="radio" name="search-option" value="@area.AreaId" id="area-status-@area.AreaId" class="btn-check me-2">
-                                <label class="btn btn-outline-primary table-status" for="area-status-@area.AreaId">@area.Name</label>
+                        <input type="radio" name="search-option" value="@area.AreaId" id="area-status-@area.AreaId"
+                            class="btn-check me-2">
+                        <label class="btn btn-outline-primary table-status"
+                            for="area-status-@area.AreaId">@area.Name</label>
                     }
                 </div>
             </div>
@@ -72,10 +75,10 @@
                         <label class="btn btn-outline-primary" for="product-catalogue-all">Tất cả</label>
                         @foreach (var catalogue in ViewBag.Catalogues)
                         {
-                                    <input type="radio" name="catalogue" value="@catalogue.CatalogueId"
-                                        id="product-catalogue-@catalogue.CatalogueId" class="btn-check">
-                                    <label class="btn btn-outline-primary"
-                                        for="product-catalogue-@catalogue.CatalogueId">@catalogue.Name</label>
+                            <input type="radio" name="catalogue" value="@catalogue.CatalogueId"
+                                id="product-catalogue-@catalogue.CatalogueId" class="btn-check">
+                            <label class="btn btn-outline-primary"
+                                for="product-catalogue-@catalogue.CatalogueId">@catalogue.Name</label>
                         }
                     </div>
                 </div>
@@ -155,7 +158,7 @@
         </div>
     </div>
 </div>
-    <div class="extra-interface d-none">
+<div class="extra-interface d-none">
     <div class="row text-center justify-content-center">
         <div class="col-lg-4 col-12">
             <svg xmlns="http://www.w3.org/2000/svg" width="260" height="293" viewBox="0 0 586.47858 659.29778"
@@ -254,98 +257,98 @@
 
 
 
-    @section Scripts {
-            <script>
-                    function slider_config() {
-                        var splide = new Splide('.splide', {
-                            drag: true,
-                            arrows: false,
-                            pagination: false,
-                            perPage: 6,
-                            breakpoints: {
-                                600: {
-                                    perPage: 2
-                                }
-                            },
-                            height: 'auto'
-                        });
-                        splide.mount();
+@section Scripts {
+    <script>
+        function slider_config() {
+            var splide = new Splide('.splide', {
+                drag: true,
+                arrows: false,
+                pagination: false,
+                perPage: 6,
+                breakpoints: {
+                    600: {
+                        perPage: 2
                     }
+                },
+                height: 'auto'
+            });
+            splide.mount();
+        }
 
-                    localStorage.setItem('a', [])
-                    $(document).ready(function () {
-                        $.get('/User/GetUserInfo', function (data) {
-                            switch (data.role) {
-                                case 1:
-                                    break;
-                                case 3:
-                                    break;
-                                default:
-                                    $('.main-order').empty();
-                                    $('.extra-interface').removeClass('d-none');
-                                    break;
+        localStorage.setItem('a', [])
+        $(document).ready(function () {
+            $.get('/User/GetUserInfo', function (data) {
+                switch (data.role) {
+                    case 1:
+                        break;
+                    case 3:
+                        break;
+                    default:
+                        $('.main-order').empty();
+                        $('.extra-interface').removeClass('d-none');
+                        break;
+                }
+            })
+            loadDropdown()
+            $('#sidebar').removeClass('active')
+            loadTable('all', 'area-all');
+            loadProduct('all');
+
+            function loadTable(selectedStatus, selectedAreaId) {
+                let str_table = '';
+                $.get('/Main/Load', function (data) {
+                    let loadTableExist = false;
+                    $.each(data.tables, function (index, table) {
+                        if ((selectedStatus == 'all' || selectedStatus == table.status) &&
+                            (selectedAreaId == 'area-all' || selectedAreaId == table.areaId)) {
+                            let table_statusStr = '';
+                            if (table.status == 0) {
+                                table_statusStr = '<span class="text-success">Đang trống</span>';
+                            } else if (table.status == 1) {
+                                table_statusStr = '<span class="text-danger">Có khách</span>';
                             }
-                        })
-                        loadDropdown()
-                        $('#sidebar').removeClass('active')
-                        loadTable('all', 'area-all');
-                        loadProduct('all');
-
-                    function loadTable(selectedStatus, selectedAreaId) {
-                        let str_table = '';
-                        $.get('/Main/Load', function (data) {
-                            let loadTableExist = false;
-                            $.each(data.tables, function (index, table) {
-                                if ((selectedStatus == 'all' || selectedStatus == table.status) &&
-                                    (selectedAreaId == 'area-all' || selectedAreaId == table.areaId)) {
-                                    let table_statusStr = '';
-                                    if (table.status == 0) {
-                                        table_statusStr = '<span class="text-success">Đang trống</span>';
-                                    } else if (table.status == 1) {
-                                        table_statusStr = '<span class="text-danger">Có khách</span>';
-                                    }
-                                    // Gọi hàm GetAreaName để lấy tên khu vực dựa vào areaId
-                                    $.get(`/Main/GetAreaName?areaId=${table.areaId}`, function (response) {
-                                        let areaName = response.areaName;
-                                        str_table += `
-                                            <li class="splide__slide pt-3">
-                                                <label for="table-${table.tableId}" class="cursor-pointer table-label">
-                                                    <div class="card table-card div-hover-effect shadow-sm p-3 text-center rounded-4 rounded-lg-5"
-                                                        style="width: 12rem;">
-                                                        <span class="text-overlay">${areaName}</span>
-                                                        <div class="card-body pt-0">
-                                                            <h4 class="card-title text-uppercase text-primary">${table.name}</h4>
-                                                            <small>${table_statusStr}</small>
-                                                        </div>
-                                                    </div>
-                                                <input type="radio" name="table" id="table-${table.tableId}" value="${table.tableId}" data-status="${table.status}" class="d-none table-select" />
-                                                </label>
-                                            </li>`;
-                                        loadTableExist = true;
-                                        $('#table-list').html(str_table);
-                                        slider_config();
-                                    });
-                                }else{
-                                    str_table = '';
-                                    $('#table-list').html(str_table);
-                                }
+                            // Gọi hàm GetAreaName để lấy tên khu vực dựa vào areaId
+                            $.get(`/Main/GetAreaName?areaId=${table.areaId}`, function (response) {
+                                let areaName = response.areaName;
+                                str_table += `
+                                                        <li class="splide__slide pt-3">
+                                                            <label for="table-${table.tableId}" class="cursor-pointer table-label">
+                                                                <div class="card table-card div-hover-effect shadow-sm p-3 text-center rounded-4 rounded-lg-5"
+                                                                    style="width: 12rem;">
+                                                                    <span class="text-overlay">${areaName}</span>
+                                                                    <div class="card-body pt-0">
+                                                                        <h4 class="card-title text-uppercase text-primary">${table.name}</h4>
+                                                                        <small>${table_statusStr}</small>
+                                                                    </div>
+                                                                </div>
+                                                            <input type="radio" name="table" id="table-${table.tableId}" value="${table.tableId}" data-status="${table.status}" class="d-none table-select" />
+                                                            </label>
+                                                        </li>`;
+                                loadTableExist = true;
+                                $('#table-list').html(str_table);
+                                slider_config();
                             });
-                        });
-                    }
+                        } else {
+                            str_table = '';
+                            $('#table-list').html(str_table);
+                        }
+                    });
+                });
+            }
 
 
-                    function loadProduct(valueToChange) {
-                        let str_product = '';
-                        $.get('/Main/Load', function (data) {
-                            let productsExist = false;
-                            $.each(data.products, function (index, product) {
-                                if (valueToChange === 'all' || product.catalogueId == valueToChange) {
-                                    let pro_catalogue = ``;
-                                    // Gửi yêu cầu AJAX để lấy tên danh mục
-                                    $.get(`/Main/GetCatalogueName?catalogueId=${product.catalogueId}`, function (response) {
-                                        let catalogueName = response.catalogueName;
-                                        str_product += `
-                                            <div class="col-6 col-md-3 col-lg-2 product-col">
+            function loadProduct(valueToChange) {
+                let str_product = '';
+                $.get('/Main/Load', function (data) {
+                    let productsExist = false;
+                    $.each(data.products, function (index, product) {
+                        if (valueToChange === 'all' || product.catalogueId == valueToChange) {
+                            let pro_catalogue = ``;
+                            // Gửi yêu cầu AJAX để lấy tên danh mục
+                            $.get(`/Main/GetCatalogueName?catalogueId=${product.catalogueId}`, function (response) {
+                                let catalogueName = response.catalogueName;
+                                str_product += `
+                                                <div class="col-6 col-md-3 col-lg-2 product-col">
                                                 <div class="card product-card bg-transparent cursor-pointer" data-id="${product.productId}">
                                                     <div class="ratio ratio-16x9 mb-2 div-hover-effect">
                                                         <img src="${product.image}" onerror="this.onerror=null; this.src='/img/placeholder.jpg'" class="card-img-top rounded-4 rounded-lg-5 object-fit-cover" alt="${product.name}">
@@ -389,338 +392,350 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>`;
-                                        productsExist = true;
-                                        $('#product-list').html(str_product);
-                                    });
-                                } else {
-                                    str_product = '';
-                                    $('#product-list').html(str_product);
-                                }
-                            });
-                        });
-                    }
-
-
-
-                    $(document).on('click', '.btn-show-offcanvas', function (e) {
-                        $('#bill-canvas').offcanvas('show');
-                    })
-
-                    $(document).on('click', '.btn-table-delivery', function (e) {
-                        e.preventDefault();
-                        $('.bill-details').empty();
-                        $('.bill-total').text(0);
-                        var id = $(this).find('[name=table]').val();
-                        $.each($('.table-label'), function (index, entity) {
-                            $(this).removeClass('table-selected');
-                            $(entity).find('.card.table-card').removeClass('border border-primary border-3')
-                        });
-                        $(this).addClass('table-selected');
-                        $('.table-name').text("Mang đi");
-                        $('#bill-canvas').offcanvas('show');
-                    });
-
-                    $(document).on('click', '.btn-bill', function (e) {
-                        e.preventDefault();
-                        if ($('.bill-details').find('*').length > 0) {
-                            $.ajax({
-                                type: $('#main-form').attr('method'),
-                                url: $('#main-form').attr('action'),
-                                data: $('#main-form').serialize(),
-                                dataType: 'json',
-                                success: function (response) {
-                                    Toastify({
-                                        text: response.msg,
-                                        duration: 3000,
-                                        close: true,
-                                        gravity: "top",
-                                        position: "center",
-                                        backgroundColor: `var(--bs-${response.status})`,
-                                    }).showToast();
-                                    setTimeout(function () {
-                                        ordered("Da len don");
-                                        window.location.href = "/Main/Index";
-                                    }, 2000);
-                                },
-                                error: function (xhr, status, error) {
-                                    console.error(error);
-                                }    
+                                                </div>`;
+                                productsExist = true;
+                                $('#product-list').html(str_product);
                             });
                         } else {
-                            Swal.fire({
-                                title: "Lưu ý!",
-                                text: "Vui lòng chọn món!",
-                                icon: "warning",
-                                showConfirmButton: true,
-                                confirmButtonText: "OK, Đã hiểu!",
-                            })
+                            str_product = '';
+                            $('#product-list').html(str_product);
                         }
                     });
+                });
+            }
 
-                    $(document).on('click', '.table-label', function (e) {
-                        e.preventDefault();
-                        $('.number-details').text(0).removeClass('d-none');
-                        const form = $('#main-form')
-                        form.find('[name=id]').val(null)
-                        form.attr('action', '/Main/Create')
-                        if (!$(this).hasClass('table-selected')) {
-                            $('.bill-details').empty();
-                            $('.bill-total').text(0);
+
+
+            $(document).on('click', '.btn-show-offcanvas', function (e) {
+                $('#bill-canvas').offcanvas('show');
+            })
+
+            $(document).on('click', '.btn-table-delivery', function (e) {
+                e.preventDefault();
+                $('.bill-details').empty();
+                $('.bill-total').text(0);
+                var id = $(this).find('[name=table]').val();
+                $.each($('.table-label'), function (index, entity) {
+                    $(this).removeClass('table-selected');
+                    $(entity).find('.card.table-card').removeClass('border border-primary border-3')
+                });
+                $(this).addClass('table-selected');
+                $('.table-name').text("Mang đi");
+                $('#bill-canvas').offcanvas('show');
+            });
+
+            $(document).on('click', '.btn-bill', function (e) {
+                e.preventDefault();
+                if ($('.bill-details').find('*').length > 0) {
+                    $.ajax({
+                        type: $('#main-form').attr('method'),
+                        url: $('#main-form').attr('action'),
+                        data: $('#main-form').serialize(),
+                        dataType: 'json',
+                        success: function (response) {
+                            Toastify({
+                                text: response.msg,
+                                duration: 3000,
+                                close: true,
+                                gravity: "top",
+                                position: "center",
+                                backgroundColor: `var(--bs-${response.status})`,
+                            }).showToast();
+                            setTimeout(function () {
+                                ordered("Da len don");
+                                window.location.href = "/Main/Index";
+                            }, 2000);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error(error);
                         }
-                        var id = $(this).find('[name=table]').val();
-                        $('#main-form').find('input[name="table_id"]').val(id);
-                        $.each($('.table-label'), function (index, entity) {
-                            $(this).removeClass('table-selected');
-                            $(entity).find('.card.table-card').removeClass('border border-primary border-3')
-                        });
-                        $(this).addClass('table-selected');
-                        $(this).find('.card.table-card').addClass('border border-primary border-3');
-                        $('.table-name').addClass('d-none');
-                        $('#bill-canvas').offcanvas('show');
-                        $.get(`/Main/GetOrderByTableId/?id=${id}`, function (data) {
-                            $('.table-name').text(data.table.name).removeClass('d-none').addClass('border border-2');
-                            $('.btn-print').attr('data-id', data.order.orderId)
-                            form.find('.btn-pay').attr('data-id', data.order.orderId).removeClass('d-none');
-                            form.find('[name=id]').val(data.order.orderId)
-                            form.find('.bill-total').text(number_format(data.order.totalPrice));
-                            form.find('.input-bill-total').val(data.order.totalPrice);
-                    
-                            if (data.order.orderId != null) {
-                                form.attr('action', '/Main/Edit')
+                    });
+                } else {
+                    Swal.fire({
+                        title: "Lưu ý!",
+                        text: "Vui lòng chọn món!",
+                        icon: "warning",
+                        showConfirmButton: true,
+                        confirmButtonText: "OK, Đã hiểu!",
+                    })
+                }
+            });
+
+            $(document).on('click', '.table-label', function (e) {
+                e.preventDefault();
+                $('.number-details').text(0).removeClass('d-none');
+                const form = $('#main-form')
+                form.find('[name=id]').val(null)
+                form.attr('action', '/Main/Create')
+                if (!$(this).hasClass('table-selected')) {
+                    $('.bill-details').empty();
+                    $('.bill-total').text(0);
+                }
+                var id = $(this).find('[name=table]').val();
+                $('#main-form').find('input[name="table_id"]').val(id);
+                $.each($('.table-label'), function (index, entity) {
+                    $(this).removeClass('table-selected');
+                    $(entity).find('.card.table-card').removeClass('border border-primary border-3')
+                });
+                $(this).addClass('table-selected');
+                $(this).find('.card.table-card').addClass('border border-primary border-3');
+                $('.table-name').addClass('d-none');
+                $('#bill-canvas').offcanvas('show');
+                $.get(`/Main/GetOrderByTableId/?id=${id}`, function (data) {
+
+                    $('.table-name').text(data.table.name).removeClass('d-none').addClass('border border-2');
+                    $('.btn-print').attr('data-id', data.order.orderId)
+                    form.find('.btn-pay').attr('data-id', data.order.orderId).removeClass('d-none');
+                    form.find('[name=id]').val(data.order.orderId)
+                    form.find('.bill-total').text(number_format(data.order.totalPrice));
+                    form.find('.input-bill-total').val(data.order.totalPrice);
+
+                    if (data.order.orderId != null) {
+                        form.attr('action', '/Main/Edit')
+                    }
+                    $('.bill-details').empty();
+                    $.each(data.details, function (index, detail) {
+                        $.get('/Product/getProduct/?id=' + detail.productId, function (response) {
+                            var str = `<div class="text-dark d-flex flex-column align-items-between w-100 ms-1 mt-2 bill-detail" data-id=${detail.productId}>
+                                                                                                                                    <div class="text-start px-1 fw-bold" > ${response.product.name}`;
+                            if (detail.status == 2) {
+                                str += `<span class="text-success ms-2"><i class="bi bi-check-circle"></i></span>`
                             }
-                            $('.bill-details').empty();
-                            $.each(data.details, function (index, detail) {
-                                $.get('/Product/getProduct/?id=' + detail.productId, function (response) {
-                                
-                                    const str = `<div class="text-dark d-flex flex-column align-items-between w-100 ms-1 mt-2 bill-detail" data-id=${response.productId}>
-                                                    <div class="text-start px-1 fw-bold">${response.product.name}</div>
-                                                    <div class="row">
-                                                        <div class="col-4 text-end pe-5 d-flex align-items-center"><span class="me-2 d-flex align-items-center">${number_format(response.product.price)}</span></div>
-                                                        <input type="hidden" name="id[]" value="${response.product.productId}"/>
-                                                        <input type="hidden" name="price[]" class="text-center px-1 bill-price border border-0" value="${response.product.price}">
-                                                        <input type="number" name="quantity[]" class="col-2 text-center px-1 bill-quantity border border-0" value="${detail.quantity}">
-                                                        <div class="col-4 text-end px-1 d-flex justify-content-end"><span class="bill-total-price me-2 d-flex align-items-center">${number_format(response.product.price * detail.quantity)}</span></div>
-                                                        <div class="col-1">
-                                                            <button type="button" class="btn btn-outline-secondary border border-0 btn-cancel rounded-2">&times;</button>
-                                                        </div>
-                                                    </div>`
-                                    $('.bill-details').append(str);
-                                    var quantity = 0;
-                                    $('.bill-quantity').each(function () {
-                                        quantity += parseInt($(this).val());
-                                    })
-                                    $('.number-details').text(quantity);
-                                });
-                            });
-                        })
-                    });
-
-            @* $(document).on('change', '#search-table', function () {
-                loadTable($(this).find('[name=status]:checked').val());
-            }); *@
-
-                    $(document).on('change', '#search-table', function () {
-                        var selectedStatus = $('[name=status]:checked').val(); // Lấy trạng thái bàn được chọn
-                        var selectedAreaId = $('[name=search-option]:checked').val(); // Lấy khu vực được chọn
-                        // Thực hiện việc lọc và hiển thị danh sách các bàn tương ứng
-                        loadTable(selectedStatus, selectedAreaId);
-                    });
-
-                    $(document).on('change', '#sreach-area', function () {
-                        var selectedAreaId = $(this).find('[name=search-option]:checked').val();
-                        var selectedStatus = $('#search-table').find('[name=status]:checked').val();
-                        loadTable(selectedStatus, selectedAreaId);
-                    });
-
-
-                    $(document).on('change', '#search-product', function () {
-                        loadProduct($(this).find('[name=catalogue]:checked').val());
-                    });
-
-                    $(document).on('click', '.btn-print', function () {
-                        const id = parseInt($(this).attr('data-id'));
-                        window.open(
-                            `Order/Bill?order_id=${id}`,
-                            '_blank',
-                            'toolbar=no,scrollbars=no,menubar=no,status=no,resizable=no,top=150,left=600,width=500,height=650'
-                        );
-                    })
-
-                    $(document).on('change keyup', '.bill-quantity', function () {
-                        var quantity = 0;
-                        $('.bill-quantity').each(function () {
-                            quantity += parseInt($(this).val());
-                        })
-                        $('.number-details').text(quantity).removeClass('d-none');
-                        var inputValue = $(this).val();
-                        $(this).val((inputValue >= 1) ? inputValue : 1)
-                        calcBillMain()
-                        $('#main-form').find('.btn-pay').addClass('d-none');
-                    })
-
-                    $(document).on('click', '.product-card', function () {
-                        var quantity = 0;
-                        const id = parseInt($(this).attr('data-id'));
-                        $('#main-form').find('.btn-pay').addClass('d-none');
-                        $.get('/Product/GetProduct/?id=' + id, function (response) {
-                            console.log(response.product)
-                            const str = `<div class="text-dark d-flex flex-column align-items-between w-100 ms-1 mt-2 bill-detail" data-id=${response.product.productId}>
-                                                <div class="text-start px-1 fw-bold">${response.product.name}</div>
-                                                <div class="row">
-                                                    <div class="col-4 text-end pe-5  d-flex align-items-center"><span class="me-2 d-flex align-items-center">${number_format(response.product.price)}</span></div>
-                                                    <input type="hidden" name="id[]" value="${response.product.productId}"/>
+                            str += `</div><div class="row">
+                                                    <input type="hidden" value="${detail.status}" name="status[]"/>
+                                                    <div class="col-4 text-end pe-5 d-flex align-items-center"><span class="me-2 d-flex align-items-center">${number_format(response.product.price)}</span></div>
+                                                    <input type="hidden" name="id[]" value="${response.product.productId}" />
                                                     <input type="hidden" name="price[]" class="text-center px-1 bill-price border border-0" value="${response.product.price}">
-                                                    <input type="number" name="quantity[]" class="col-2 text-center px-1 bill-quantity border border-0" value="1">
-                                                    <div class="col-4 text-end px-1 d-flex justify-content-end"><span class="bill-total-price me-2 d-flex align-items-center">${number_format(response.product.price)}</span></div>
+                                                    <input type="number" name="quantity[]" class="col-2 text-center px-1 bill-quantity border border-0" value="${detail.quantity}">
+                                                    <div class="col-4 text-end px-1 d-flex justify-content-end"><span class="bill-total-price me-2 d-flex align-items-center">${number_format(response.product.price * detail.quantity)}</span></div>
                                                     <div class="col-1">
                                                         <button type="button" class="btn btn-outline-secondary border border-0 btn-cancel rounded-2">&times;</button>
                                                     </div>
-                                            </div>`
+                                                    <div class="col-12 mb-1">
+                                                        <input type="text" name="note[]" class="form-control small order-note w-100" placeholder="Ghi chú" value="${detail.note ?? ''}">
+                                                    </div>
+                                                </div>`;
                             $('.bill-details').append(str);
-                            calcBillMain()
+                            var quantity = 0;
                             $('.bill-quantity').each(function () {
                                 quantity += parseInt($(this).val());
                             })
-                            $('.number-details').text(quantity).removeClass('d-none');
+                            $('.number-details').text(quantity);
                         });
-                    })
+                    });
+                })
+            });
 
-                    $(document).on('click', '.btn-cancel', function () {
-                        $(this).parents('.bill-detail').remove();
-                        $('#main-form').find('.btn-pay').addClass('d-none')
-                        var quantity = 0;
-                        $('.bill-quantity').each(function () {
-                            quantity += parseInt($(this).val());
-                        })
-                        $('.number-details').text(quantity).removeClass('d-none');
-                        calcBillMain();
-                    })
+        @* $(document).on('change', '#search-table', function () {
+            loadTable($(this).find('[name=status]:checked').val());
+            }); *@
 
-                    $(document).on('click', '.btn-pay', function () {
-                        const id = parseInt($(this).attr('data-id'));
-                        const priceIMG = $(this).parents('form').find('.input-bill-total').val();
-                        Swal.fire({
-                            title: "Thanh toán",
-                            text: "Vui lòng chọn phương thức thanh toán",
-                            icon: "warning",
-                            showCancelButton: true,
-                            confirmButtonText: "Tiền mặt",
-                            cancelButtonText: "Chuyển khoản",
-                            reverseButtons: true
-                        }).then((result) => {
-                            let totalPrice_img = 0;
-                            if (!result.isConfirmed) {
-                                let modalEx = $('#config-example'), str = `https://img.vietqr.io/image/`;
-                                $.get(`/Config/Load`, function (configList) {
-                                    $.each(configList, function (index, config) {
-                                        if (config.key == "bank_number") {
-                                            str += config.value + '-';
-                                        } if (config.key == "bank_id") {
-                                            str += config.value + '-';
-                                        }
-                                        if (config.key == "bank_template") {
-                                            str += config.value + `.png?amount=${priceIMG}&addInfo=`;
-                                        }
-                                        if (config.key == "bank_content") {
-                                            str += config.value;
-                                        }
-                                    });
-                                    modalEx.find('img').attr('src', str);
-                                });
-                                modalEx.modal('show');
-            @* console.log(str); *@
-                                    modalEx.on('hidden.bs.modal', function (e) {
-                                        $.ajax({
-                                            url: '/Order/Pay',
-                                            type: 'POST',
-                                            data: { id: id, payment: '2' },
-                                            success: function () {
-                                                window.location.href = "/Main/Index";
-                                            },
-                                            error: function (xhr, status, error) {
-                                                console.error(xhr.responseText);
-                                            }
-                                        });
-                                    });
-                            } else {
-                                $.ajax({
-                                    url: '/Order/Pay',
-                                    type: 'POST',
-                                    data: { id: id, payment: '1' },
-                                    success: function () {
-                                        window.location.href = "/Main/Index";
-                                    },
-                                    error: function (xhr, status, error) {
-                                        console.error(xhr.responseText);
-                                    }
-                                });
-                            }
-                        });
-                        });
-
-                        $('.number-meals').text(JSON.parse(localStorage.getItem('localDetails')).length).removeClass('d-none');
-
-                        $(document).on('click', '.btn-remove-bartender', function (e) {
-                            e.preventDefault()
-                            var localDetails = JSON.parse(localStorage.getItem('localDetails')), newlocalDetails = [];
-                            let detail_id = $(this).attr('data-id');
-                            $.each(localDetails, function (i, detail_product_name) {
-                                if (detail_product_name.detail.detailId != detail_id) {
-                                    newlocalDetails.push({ detail: detail_product_name.detail, productName: detail_product_name.productName })
-                                }
-                            })
-                            localStorage.setItem('localDetails', JSON.stringify(newlocalDetails))
-                            window.location.href = "/Main/Index";
-                    })
-
+                $(document).on('change', '#search-table', function () {
+                    var selectedStatus = $('[name=status]:checked').val(); // Lấy trạng thái bàn được chọn
+                    var selectedAreaId = $('[name=search-option]:checked').val(); // Lấy khu vực được chọn
+                    // Thực hiện việc lọc và hiển thị danh sách các bàn tương ứng
+                    loadTable(selectedStatus, selectedAreaId);
                 });
 
-                    function calcBillMain() {
-                        let total = 0;
-                        $('#main-form .bill-detail').each(function () {
-                            let sum = $(this).find('.bill-price').val() * $(this).find('.bill-quantity').val();
-                            $(this).find('.bill-total-price').text(number_format(sum));
-                            total += sum;
-                        })
-                        $('#main-form').find('.input-bill-total').val(total)
-                        $('#main-form').find('.bill-total').text(number_format(total))
-                    }
-
-                    function loadDropdown() {
-                        var localDetails = JSON.parse(localStorage.getItem('localDetails'));
-                        let str = ``
-                        $.each(localDetails, function (i, detail_product_name) {
-                            str += `<li><a class="dropdown-item btn-remove-bartender" href="#" data-id=${detail_product_name.detail.detailId}>${detail_product_name.productName}</a></li>`
-                        })
-                        $('.dropdown-list').append(str)
-                    }
-
-                    var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
-                    connection.on("Noti", function (detail) {
-                        var localDetails = localStorage.getItem('localDetails');
-                        if (!localDetails || localDetails.length === 0) {
-                            localDetails = [];
-                        } else {
-                            localDetails = JSON.parse(localDetails);
-                        }
-                        localDetails.push(detail);
-                        localStorage.setItem('localDetails', JSON.stringify(localDetails))
-                        $('.number-meals').text(localDetails.length).removeClass('d-none');
-                        window.location.href = "/Main/Index";
-                    });
+            $(document).on('change', '#sreach-area', function () {
+                var selectedAreaId = $(this).find('[name=search-option]:checked').val();
+                var selectedStatus = $('#search-table').find('[name=status]:checked').val();
+                loadTable(selectedStatus, selectedAreaId);
+            });
 
 
-                    connection.start().then(function () {
-                        log("Kếconsole.t nối SignalR đã được thiết lập.");
-                    }).catch(function (err) {
-                        console.error("Lỗi khi kết nối SignalR: " + err);
-                    });
+            $(document).on('change', '#search-product', function () {
+                loadProduct($(this).find('[name=catalogue]:checked').val());
+            });
 
-                    function ordered(data) {
-                        connection.invoke("Ordered", data).catch(function (err) {
-                            console.error("Lỗi khi gọi hàm SendNotification: " + err.toString());
+            $(document).on('click', '.btn-print', function () {
+                const id = parseInt($(this).attr('data-id'));
+                window.open(
+                    `/Order/Bill?order_id=${id}`,
+                    '_blank',
+                    'toolbar=no,scrollbars=no,menubar=no,status=no,resizable=no,top=150,left=600,width=500,height=650'
+                );
+            })
+
+            $(document).on('change keyup', '.bill-quantity', function () {
+                var quantity = 0;
+                $('.bill-quantity').each(function () {
+                    quantity += parseInt($(this).val());
+                })
+                $('.number-details').text(quantity).removeClass('d-none');
+                var inputValue = $(this).val();
+                $(this).val((inputValue >= 1) ? inputValue : 1)
+                calcBillMain()
+                $('#main-form').find('.btn-pay').addClass('d-none');
+            })
+
+            $(document).on('click', '.product-card', function () {
+                var quantity = 0;
+                const id = parseInt($(this).attr('data-id'));
+                $('#main-form').find('.btn-pay').addClass('d-none');
+                $.get('/Product/GetProduct/?id=' + id, function (response) {
+                    const str = `<div class="text-dark d-flex flex-column align-items-between w-100 ms-1 mt-2 bill-detail" data-id=${response.product.productId}>
+                                                                <div class="text-start px-1 fw-bold">${response.product.name}</div>
+                                                                <div class="row">
+                                                                    <input type="hidden" name="status[]" value="0"/>
+                                                                    <div class="col-4 text-end pe-5  d-flex align-items-center"><span class="me-2 d-flex align-items-center">${number_format(response.product.price)}</span></div>
+                                                                    <input type="hidden" name="id[]" value="${response.product.productId}" />
+                                                                    <input type="hidden" name="price[]" class="text-center px-1 bill-price border border-0" value="${response.product.price}">
+                                                                    <input type="number" name="quantity[]" class="col-2 text-center px-1 bill-quantity border border-0" value="1">
+                                                                    <div class="col-4 text-end px-1 d-flex justify-content-end"><span class="bill-total-price me-2 d-flex align-items-center">${number_format(response.product.price)}</span></div>
+                                                                    <div class="col-1">
+                                                                        <button type="button" class="btn btn-outline-secondary border border-0 btn-cancel rounded-2">&times;</button>
+                                                                    </div>
+                                                                    <div class="col-12 mb-1">
+                                                                        <input type="text" name="note[]" class="form-control small order-note w-100" placeholder="Ghi chú">
+                                                                    </div>
+                                                                </div>`
+                    $('.bill-details').append(str);
+                    calcBillMain()
+                    $('.bill-quantity').each(function () {
+                        quantity += parseInt($(this).val());
+                    })
+                    $('.number-details').text(quantity).removeClass('d-none');
+                });
+            })
+
+            $(document).on('click', '.btn-cancel', function () {
+                $(this).parents('.bill-detail').remove();
+                $('#main-form').find('.btn-pay').addClass('d-none')
+                var quantity = 0;
+                $('.bill-quantity').each(function () {
+                    quantity += parseInt($(this).val());
+                })
+                $('.number-details').text(quantity).removeClass('d-none');
+                calcBillMain();
+            })
+
+            $(document).on('click', '.btn-pay', function () {
+                const id = parseInt($(this).attr('data-id'));
+                const priceIMG = $(this).parents('form').find('.input-bill-total').val();
+                Swal.fire({
+                    title: "Thanh toán",
+                    text: "Vui lòng chọn phương thức thanh toán",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Tiền mặt",
+                    cancelButtonText: "Chuyển khoản",
+                    reverseButtons: true
+                }).then((result) => {
+                    let totalPrice_img = 0;
+                    if (!result.isConfirmed) {
+                        let modalEx = $('#config-example'), str = `https://img.vietqr.io/image/`;
+                        $.get(`/Config/Load`, function (configList) {
+                            $.each(configList, function (index, config) {
+                                if (config.key == "bank_number") {
+                                    str += config.value + '-';
+                                } if (config.key == "bank_id") {
+                                    str += config.value + '-';
+                                }
+                                if (config.key == "bank_template") {
+                                    str += config.value + `.png?amount=${priceIMG}&addInfo=`;
+                                }
+                                if (config.key == "bank_content") {
+                                    str += config.value;
+                                }
+                            });
+                            modalEx.find('img').attr('src', str);
+                        });
+                        modalEx.modal('show');
+                        modalEx.on('hidden.bs.modal', function (e) {
+                            $.ajax({
+                                url: '/Order/Pay',
+                                type: 'POST',
+                                data: { id: id, payment: '2' },
+                                success: function () {
+                                    window.location.href = "/Main/Index";
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error(xhr.responseText);
+                                }
+                            });
+                        });
+                    } else {
+                        $.ajax({
+                            url: '/Order/Pay',
+                            type: 'POST',
+                            data: { id: id, payment: '1' },
+                            success: function () {
+                                window.location.href = "/Main/Index";
+                            },
+                            error: function (xhr, status, error) {
+                                console.error(xhr.responseText);
+                            }
                         });
                     }
-                </script>
-    }
+                });
+            });
+
+            $('.number-meals').text(JSON.parse(localStorage.getItem('localDetails')).length).removeClass('d-none');
+
+            $(document).on('click', '.btn-remove-bartender', function (e) {
+                e.preventDefault();
+                var localDetails = JSON.parse(localStorage.getItem('localDetails')), newlocalDetails = [];
+                let detail_id = $(this).attr('data-id');
+                $.get('/Main/CompleteDetail/?id=' + detail_id, function (data) {
+                    console.log(data)
+                })
+                $.each(localDetails, function (i, detail_product_name) {
+                    if (detail_product_name.detail.detailId != detail_id) {
+                        newlocalDetails.push({ detail: detail_product_name.detail, productName: detail_product_name.productName })
+                    }
+                })
+                localStorage.setItem('localDetails', JSON.stringify(newlocalDetails))
+                window.location.href = "/Main/Index";
+            })
+
+        });
+
+        function calcBillMain() {
+            let total = 0;
+            $('#main-form .bill-detail').each(function () {
+                let sum = $(this).find('.bill-price').val() * $(this).find('.bill-quantity').val();
+                $(this).find('.bill-total-price').text(number_format(sum));
+                total += sum;
+            })
+            $('#main-form').find('.input-bill-total').val(total)
+            $('#main-form').find('.bill-total').text(number_format(total))
+        }
+
+        function loadDropdown() {
+            var localDetails = JSON.parse(localStorage.getItem('localDetails'));
+            let str = ``
+            $.each(localDetails, function (i, detail_product_name) {
+                str += `<li><a class="dropdown-item btn-remove-bartender" href="#" data-id=${detail_product_name.detail.detailId}>${detail_product_name.productName}</a></li>`
+            })
+            $('.dropdown-list').append(str)
+        }
+
+        var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+        connection.on("Noti", function (detail) {
+            var localDetails = localStorage.getItem('localDetails');
+            if (!localDetails || localDetails.length === 0) {
+                localDetails = [];
+            } else {
+                localDetails = JSON.parse(localDetails);
+            }
+            localDetails.push(detail);
+            localStorage.setItem('localDetails', JSON.stringify(localDetails))
+            $('.number-meals').text(localDetails.length).removeClass('d-none');
+            window.location.href = "/Main/Index";
+        });
+
+
+        connection.start().then(function () {
+            log("Kếconsole.t nối SignalR đã được thiết lập.");
+        }).catch(function (err) {
+            console.error("Lỗi khi kết nối SignalR: " + err);
+        });
+
+        function ordered(data) {
+            connection.invoke("Ordered", data).catch(function (err) {
+                console.error("Lỗi khi gọi hàm SendNotification: " + err.toString());
+            });
+        }
+    </script>
+}

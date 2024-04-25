@@ -86,14 +86,12 @@ namespace ManageCoffee.Controllers
         {
             Order order = OrderDAO.Instance.GetOrderByID(int.Parse(request["id"]));
             User user = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
-            System.Console.WriteLine(order.TableId);
             order.UserId = 1;
             order.TotalPrice = int.Parse(request["total_price"]);
             dbContext.Orders.Update(order);
             dbContext.SaveChanges();
             order.RemoveDetails();
             //Tạo detail
-            System.Console.WriteLine(request["quantity[]"] + " danh sách số lg");
             for (int i = 0; i < request["quantity[]"].Count(); i++)
             {
                 Detail detail = new Detail();
@@ -101,7 +99,8 @@ namespace ManageCoffee.Controllers
                 detail.ProductId = int.Parse(request["id[]"][i]);
                 detail.Quantity = int.Parse(request["quantity[]"][i]);
                 detail.Price = int.Parse(request["price[]"][i]);
-                System.Console.WriteLine("Đây là product ID: " + int.Parse(request["id[]"][i]));
+                detail.Note = request["note[]"][i];
+                detail.Status = int.Parse(request["status[]"][i]);
                 DetailDAO.Instance.AddNew(detail);
             }
 
@@ -168,6 +167,16 @@ namespace ManageCoffee.Controllers
         {
             string areaName = GetAreaNameById(areaId);
             return Json(new { areaName });
+        }
+
+        public IActionResult CompleteDetail(int id)
+        {
+            Detail detail = DetailDAO.Instance.GetDetailByID(id);
+            OrderDAO orderDAO = new OrderDAO();
+            TableDAO tableDAO = new TableDAO();
+            detail.Status = 2;
+            DetailDAO.Instance.Update(detail);
+            return Json(new { str = "Đã cập nhật trạng thái món" });
         }
 
     }
