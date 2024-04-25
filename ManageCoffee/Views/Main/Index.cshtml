@@ -332,7 +332,8 @@
                     function loadProduct(valueToChange) {
                         let str_product = '';
                         $.get('/Main/Load', function (data) {
-                            console.log(data); // In ra dữ liệu sản phẩm để kiểm tra
+                         
+                         
                             let productsExist = false;
                             $.each(data.products, function (index, product) {
                                 if (valueToChange === 'all' || product.catalogueId == valueToChange) {
@@ -481,14 +482,14 @@
                             form.find('[name=id]').val(data.order.orderId)
                             form.find('.bill-total').text(number_format(data.order.totalPrice));
                             form.find('.input-bill-total').val(data.order.totalPrice);
-                            console.log(data)
+                    
                             if (data.order.orderId != null) {
                                 form.attr('action', '/Main/Edit')
                             }
                             $('.bill-details').empty();
                             $.each(data.details, function (index, detail) {
                                 $.get('/Product/getProduct/?id=' + detail.productId, function (response) {
-                                    console.log(response)
+                                
                                     const str = `<div class="text-dark d-flex flex-column align-items-between w-100 ms-1 mt-2 bill-detail" data-id=${response.productId}>
                                                     <div class="text-start px-1 fw-bold">${response.product.name}</div>
                                                     <div class="row">
@@ -685,17 +686,15 @@
 
                     function loadDropdown() {
                         var localDetails = JSON.parse(localStorage.getItem('localDetails'));
-                        console.log(localDetails)
                         let str = ``
                         $.each(localDetails, function (i, detail_product_name) {
-                            str += `<li><a class="dropdown-item btn-remove-bartender" href="#" data-id=${detail_product_name.detail.detailId}>${detail_product_name.productName} Đơn hàng số ${detail_product_name.detail.orderId}</a></li>`
+                            str += `<li><a class="dropdown-item btn-remove-bartender" href="#" data-id=${detail_product_name.detail.detailId}>${detail_product_name.productName}</a></li>`
                         })
                         $('.dropdown-list').append(str)
                     }
 
                     var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
                     connection.on("Noti", function (detail) {
-                        console.log("Thông báo:", detail);
                         var localDetails = localStorage.getItem('localDetails');
                         if (!localDetails || localDetails.length === 0) {
                             localDetails = [];
@@ -708,8 +707,10 @@
                         window.location.href = "/Main/Index";
                     });
 
+
+
                     connection.start().then(function () {
-                        console.log("Kết nối SignalR đã được thiết lập.");
+                        log("Kếconsole.t nối SignalR đã được thiết lập.");
                     }).catch(function (err) {
                         console.error("Lỗi khi kết nối SignalR: " + err);
                     });

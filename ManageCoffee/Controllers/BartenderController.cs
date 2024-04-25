@@ -46,12 +46,16 @@ namespace ManageCoffee.Controllers
         public IActionResult CompleteDetail(int id)
         {
             Detail detail = DetailDAO.Instance.GetDetailByID(id);
+            OrderDAO orderDAO = new OrderDAO();
+            TableDAO tableDAO = new TableDAO();
             detail.Status = 1;
             DetailDAO.Instance.Update(detail);
             var context = new ManageCoffeeContext();
             Product p = context.Products.FirstOrDefault(p => p.ProductId == detail.ProductId);
-            return Json(new { detail = detail, productName = p.Name });
-
+            var str = p.Name + " - " + ((orderDAO.GetOrderByID(detail.OrderId).TableId != null) ? tableDAO.GetTableByID(orderDAO.GetOrderByID(detail.OrderId).TableId).Name : ("Đơn " + detail.OrderId + "(Mang đi)"));
+            return Json(new { detail = detail, 
+                            productName = str
+                        });
         }
     }
 }
