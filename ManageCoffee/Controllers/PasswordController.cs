@@ -15,7 +15,6 @@ using ManageCoffee.Models.Authentication;
 
 namespace ManageCoffee.Controllers
 {
-    [Authentication]
     public class PasswordController : Controller
     {
         private readonly ManageCoffeeContext _db;

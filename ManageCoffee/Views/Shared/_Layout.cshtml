@@ -78,13 +78,13 @@
                                     </li>
                                 </ul>
                             </li>
-                            <li class="sidebar-item @(ViewBag.IsActive == "order" ? "active" : "")">
+                            <li class="sidebar-item order_load @(ViewBag.IsActive == "order" ? "active" : "")">
                                 <a asp-controller="Order" asp-action="Index" class='sidebar-link'>
                                     <i class="icon-mid d-flex algin-items-center bi bi-receipt"></i>
                                     <span>Quản lý đơn hàng</span>
                                 </a>
                             </li>
-                            <li class="sidebar-item @(ViewBag.IsActive == "bartender" ? "active" : "")">
+                            <li class="sidebar-item bartender_load @(ViewBag.IsActive == "bartender" ? "active" : "")">
                                 <a asp-controller="Bartender" asp-action="Index" class='sidebar-link'>
                                     <i class="icon-mid d-flex algin-items-center bi bi-cup-straw"></i>
                                     <span>Pha chế</span>
@@ -300,14 +300,17 @@
             switch (data.role) {
                 case 1:
                     $('.auth-role').text('Admin');
+                    $('.bartender_load').empty();
                     break;
                 case 2:
                     $('.auth-role').text('Pha chế');
                     $('.setting').empty();
+                    $('.order_load').empty();
                     break;
                 default:
                     $('.auth-role').text('Nhân viên');
                     $('.setting').empty();
+                    $('.bartender_load').empty();
                     break;
             }
             $('.hello-auth').text('Chào bạn, ' + data.name)
@@ -359,23 +362,16 @@
                     showConfirmButton: true,
                     confirmButtonText: "OK, Đã hiểu!",
                 })
-            } else if (status == "Chưa thanh toán") {
+            } else if (status == "Đã thanh toán") {
                 Swal.fire({
                     title: "Lưu ý!",
-                    text: "Đơn hàng chưa thanh toán không thể xóa!",
+                    text: "Đơn hàng đã thanh toán không thể xóa!",
                     icon: "warning",
                     showConfirmButton: true,
                     confirmButtonText: "OK, Đã hiểu!",
                 });
-            }else if ($('.auth-role').text() == 'Admin') {
-                Swal.fire({
-                    title: "Lưu ý!",
-                    text: "Bạn không có quyền hạn thực hiện thao tác này!",
-                    icon: "warning",
-                    showConfirmButton: true,
-                    confirmButtonText: "OK, Đã hiểu!",
-                })
-            }  else if (status == "Có khách") {
+            }
+            else if (status == "Có khách") {
                 Swal.fire({
                     title: "Lưu ý!",
                     text: "Hiện tại bàn đang có khách, không thể xóa!",

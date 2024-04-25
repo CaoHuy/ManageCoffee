@@ -191,6 +191,7 @@ namespace ManageCoffee.DAO
             }
             return numberProduct;
         }
+        
         public decimal GetDailyRevenues(DateTime startDate, DateTime endDate)
         {
             try
