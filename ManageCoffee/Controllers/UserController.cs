@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using ManageCoffee.Models.Authentication;
+using System.Net.Mail;
+using System.Net;
 
 namespace ManageCoffee.Controllers
 {
@@ -80,8 +82,11 @@ namespace ManageCoffee.Controllers
                     {
                         return View(user);
                     }
-                    user.Password = HashPassword(user.Password);
-                    UserDAO.Instance.AddNew(user);
+                    string unhashedPassword = user.Password; // Lấy mật khẩu không mã hóa từ người dùng
+                    string hashedPassword = HashPassword(unhashedPassword); // Mã hóa mật khẩu bằng MD5
+                    user.Password = hashedPassword; // Gán mật khẩu đã mã hóa vào đối tượng người dùng
+                    UserDAO.Instance.AddNew(user); // Thêm người dùng vào cơ sở dữ liệu
+                    SendPasswordEmail(user.Email, unhashedPassword); // Gửi mật khẩu chưa mã hóa qua email
                     var dbContext = new ManageCoffeeContext();
                     User auth = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user"));
                     LogDAO dao = new LogDAO();
@@ -154,7 +159,6 @@ namespace ManageCoffee.Controllers
                     ModelState.AddModelError("Phone", "Số điện thoại đã tồn tại");
                     return View(user);
                 }
-
                 // Cập nhật thông tin người dùng
                 user.Password = existingUser.Password;
                 UserDAO.Instance.Update(user);
@@ -236,6 +240,33 @@ namespace ManageCoffee.Controllers
         public User GetUserInfo()
         {
             return Helper.UserInfo(HttpContext);
+        }
+
+        public void SendPasswordEmail(string toEmail, string password)
+        {
+            string fromAddress = "lochvtce170122@fpt.edu.vn";
+            string fromPassword = "zhpnjgvwryfhfapr";
+
+            string subject = "Đây là mật khẩu của bạn";
+            string body = $"Mật khẩu của bạn là: {password}";
+
+            SmtpClient smtp = new SmtpClient
+            {
+                Host = "smtp.gmail.com",
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(fromAddress, fromPassword),
+                Timeout = 20000
+            };
+
+            using (MailMessage message = new MailMessage(fromAddress, toEmail))
+            {
+                message.Subject = subject;
+                message.Body = body;
+                smtp.Send(message);
+            }
         }
     }
 }

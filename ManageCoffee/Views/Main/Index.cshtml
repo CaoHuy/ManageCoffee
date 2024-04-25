@@ -294,6 +294,7 @@
                     function loadTable(selectedStatus, selectedAreaId) {
                         let str_table = '';
                         $.get('/Main/Load', function (data) {
+                            let loadTableExist = false;
                             $.each(data.tables, function (index, table) {
                                 if ((selectedStatus == 'all' || selectedStatus == table.status) &&
                                     (selectedAreaId == 'area-all' || selectedAreaId == table.areaId)) {
@@ -320,9 +321,13 @@
                                                 <input type="radio" name="table" id="table-${table.tableId}" value="${table.tableId}" data-status="${table.status}" class="d-none table-select" />
                                                 </label>
                                             </li>`;
+                                        loadTableExist = true;
                                         $('#table-list').html(str_table);
                                         slider_config();
                                     });
+                                }else{
+                                    str_table = '';
+                                    $('#table-list').html(str_table);
                                 }
                             });
                         });
@@ -332,8 +337,6 @@
                     function loadProduct(valueToChange) {
                         let str_product = '';
                         $.get('/Main/Load', function (data) {
-                         
-                         
                             let productsExist = false;
                             $.each(data.products, function (index, product) {
                                 if (valueToChange === 'all' || product.catalogueId == valueToChange) {
