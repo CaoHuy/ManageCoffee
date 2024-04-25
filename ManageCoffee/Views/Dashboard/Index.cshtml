@@ -247,7 +247,9 @@
                             revenueMap[moment(order.createdAt).format('DD-MM-YYYY')] = order.totalPrice;
                         }
                     })
-                    $('.revenues').text(sumRevenue);
+                    
+                    let revenueInVND = sumRevenue.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+                    $('.revenues').text(revenueInVND);
                     $('.totalOrders').text(numOrder);
                     $('.numProducts').text(numProduct);
                 }).done(function () {
