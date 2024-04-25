@@ -247,7 +247,7 @@
                             revenueMap[moment(order.createdAt).format('DD-MM-YYYY')] = order.totalPrice;
                         }
                     })
-                    $('.revenues').text(sumRevenue);
+                    $('.revenues').text(formatVND(sumRevenue));
                     $('.totalOrders').text(numOrder);
                     $('.numProducts').text(numProduct);
                 }).done(function () {
@@ -301,6 +301,10 @@
                     });
                     drawChart(Object.keys(revenueMapBy_mm), Object.values(revenueMapBy_mm));
                 })
+            }
+
+            function formatVND(number) {
+                return number.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
             }
 
             //Vẽ biểu đổ với 2 tham số
