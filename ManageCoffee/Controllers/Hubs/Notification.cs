@@ -14,5 +14,11 @@ namespace ManageCoffee.Controllers.Hubs
             System.Console.WriteLine("" + details);
             await Clients.All.SendAsync("Noti", details);
         }
+
+        public async Task Ordered(string order)
+        {
+            System.Console.WriteLine("" + order);
+            await Clients.All.SendAsync("Ord", order);
+        }
     }
 }

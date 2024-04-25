@@ -436,6 +436,7 @@
                                         backgroundColor: `var(--bs-${response.status})`,
                                     }).showToast();
                                     setTimeout(function () {
+                                        ordered("Da len don");
                                         window.location.href = "/Main/Index";
                                     }, 2000);
                                 },
@@ -443,7 +444,6 @@
                                     console.error(error);
                                 }    
                             });
-                            window.location.href = "/Main/Index";
                         } else {
                             Swal.fire({
                                 title: "Lưu ý!",
@@ -714,5 +714,11 @@
                     }).catch(function (err) {
                         console.error("Lỗi khi kết nối SignalR: " + err);
                     });
+
+                    function ordered(data) {
+                        connection.invoke("Ordered", data).catch(function (err) {
+                            console.error("Lỗi khi gọi hàm SendNotification: " + err.toString());
+                        });
+                    }
                 </script>
     }
